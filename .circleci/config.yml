@@ -60,14 +60,6 @@ jobs:
             sudo apt-get install -y awscli
             sudo apt-get install -y python-pip python-dev build-essential
       - run:
-          name: Build project
-          command: |
-            npm install
-            npm run build
-            cd build
-            zip ../build.zip -r * .[^.]*
-            echo "Build succesful"
-      - run:
           name: Deploy to AWS S3
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ] 
@@ -121,7 +113,7 @@ workflows:
             - install-dependencies
       - deploy-s3:
           requires: 
-            - install-dependencies
+            - build
           filters:
             branches:
               only: 
