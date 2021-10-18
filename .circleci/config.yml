@@ -47,11 +47,11 @@ jobs:
             npm run build
             cd build
             zip ../build.zip -r * .[^.]*
-            echo "Build succesful"
-      - save_cache:
-          paths:
+            echo "Build succesful"            
+      - persist_to_workspace:
+          root: ./
+          paths: 
             - build
-          key: app-{{ checksum "build"}}
 
   deploy-s3:
     docker:
@@ -59,6 +59,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - attach_workspace:
+          at: ./
       - run:
           name: Show current branch
           command: echo ${CIRCLE_BRANCH}
