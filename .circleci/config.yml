@@ -42,6 +42,10 @@ jobs:
             cd build
             zip ../build.zip -r * .[^.]*
             echo "Build succesful"
+      - save_cache:
+          paths:
+            - build
+          key: app-{{ checksum "build"}}
 
   deploy-s3:
     docker:
@@ -59,6 +63,10 @@ jobs:
             sudo apt-get -y -qq update
             sudo apt-get install -y awscli
             sudo apt-get install -y python-pip python-dev build-essential
+      - restore_cache:
+          keys:
+            - app-{{ checksum "build"}}
+            - app-
       - run:
           name: Deploy to AWS S3
           command: |
