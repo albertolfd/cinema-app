@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   install-dependencies:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:13.12.0
     working_directory: ~/repo
     steps:
       - checkout
@@ -24,17 +24,13 @@ jobs:
 
   build:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:13.12.0
     working_directory: ~/repo
     steps:
       - checkout
       - run:
           name: Show current branch
           command: echo ${CIRCLE_BRANCH}
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json"}}
-            - app-
       - run:
           name: Build project
           command: |
@@ -42,14 +38,10 @@ jobs:
             cd build
             zip ../build.zip -r * .[^.]*
             echo "Build succesful"
-      - save_cache:
-          paths:
-            - build
-          key: app-{{ checksum "build"}}
 
   deploy-s3:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:13.12.0
     working_directory: ~/repo
     steps:
       - checkout
@@ -63,10 +55,6 @@ jobs:
             sudo apt-get -y -qq update
             sudo apt-get install -y awscli
             sudo apt-get install -y python-pip python-dev build-essential
-      - restore_cache:
-          keys:
-            - app-{{ checksum "build"}}
-            - app-
       - run:
           name: Deploy to AWS S3
           command: |
@@ -83,7 +71,7 @@ jobs:
 
   deploy-cloudfront:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:13.12.0
     working_directory: ~/repo
     steps:
       - checkout
