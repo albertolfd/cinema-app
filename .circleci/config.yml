@@ -9,7 +9,7 @@ jobs:
       - checkout
       - run:
           name: Show current branch
-          command: echo ${CURRENT_BRANCH}
+          command: echo ${CIRCLE_BRANCH}
       - restore_cache:
           keys:
             - app-{{ checksum "package.json"}}
@@ -30,7 +30,7 @@ jobs:
       - checkout
       - run:
           name: Show current branch
-          command: echo ${CURRENT_BRANCH}
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Build project
           command: |
@@ -47,7 +47,7 @@ jobs:
       - checkout
       - run:
           name: Show current branch
-          command: echo ${CURRENT_BRANCH}
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Install AWS CLI
           working_directory: /
@@ -58,13 +58,13 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
-            if [ "${CURRENT_BRANCH}" == "master" ] 
+            if [ "${CIRCLE_BRANCH}" == "master" ] 
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_PROD_BUCKET} --delete
-            elif [ "${CURRENT_BRANCH}" == "stage" ]
+            elif [ "${CIRCLE_BRANCH}" == "stage" ]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_STAGE_BUCKET} --delete
-            elif [ "${CURRENT_BRANCH}" == "development" ]
+            elif [ "${CIRCLE_BRANCH}" == "development" ]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_DEV_BUCKET} --delete
             fi
@@ -77,7 +77,7 @@ jobs:
       - checkout
       - run:
           name: Show current branch
-          command: echo ${CURRENT_BRANCH}
+          command: echo ${CIRCLE_BRANCH}
       - run:
           name: Installing AWS CLI
           working_directory: /
@@ -89,13 +89,13 @@ jobs:
           name: Deploy to AWS Cloudfront
           command: |
             aws configure set preview.cloudfront 
-            if [ "${CURRENT_BRANCH}" == "master" ] 
+            if [ "${CIRCLE_BRANCH}" == "master" ] 
             then
               aws cloudfront create-invalidation --distribution-id ${PROD_DISTRIBUTION_ID} --paths /\*
-            elif [ "${CURRENT_BRANCH}" == "stage" ]
+            elif [ "${CIRCLE_BRANCH}" == "stage" ]
             then
               aws cloudfront create-invalidation --distribution-id ${STAGE_DISTRIBUTION_ID} --paths /\*
-            elif [ "${CURRENT_BRANCH}" == "development" ]
+            elif [ "${CIRCLE_BRANCH}" == "development" ]
             then
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
