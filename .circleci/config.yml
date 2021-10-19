@@ -1,15 +1,35 @@
 version: 2.1
 
-jobs:
-  install-dependencies:
+executors:
+  app-executor: # executor name. Free
     docker:
       - image: circleci/node:latest
     working_directory: ~/repo
+
+aliases:
+  - &show-current-branch-name
+    run:
+      name: Show current branch
+      command: echo ${CIRCLE_BRANCH}
+  - &attach_workspace
+    attach_workspace:
+      at: ./
+  - &install-aws-cli
+    run:
+      name: Install AWS CLI
+      working_directory: /
+      command: |
+        sudo apt-get -y -qq update
+        sudo apt-get install -y awscli
+        sudo apt-get install -y python-pip python-dev build-essential
+
+
+jobs:
+  install-dependencies:
+    executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
+      - *show-current-branch-name
       - restore_cache:
           keys:
             - app-{{ checksum "package.json"}}
@@ -27,20 +47,11 @@ jobs:
             - node_modules
 
   build:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/repo
+    executor: app-executor
     steps:
       - checkout
-      - attach_workspace:
-          at: ./
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - restore_cache:
-          keys:
-            - app-{{ checksum "package.json"}}
-            - app-
+      - *attach_workspace
+      - *show-current-branch-name
       - run:
           name: Build project
           command: |
@@ -54,23 +65,12 @@ jobs:
             - build
 
   deploy-s3:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/repo
+    executor: app-executor
     steps:
       - checkout
-      - attach_workspace:
-          at: ./
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: Install AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
+      - *attach_workspace
+      - *show-current-branch-name
+      - *install-aws-cli
       - run:
           name: Deploy to AWS S3
           command: |
@@ -86,21 +86,11 @@ jobs:
             fi
 
   deploy-cloudfront:
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/repo
+    executor: app-executor
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      - run:
-          name: Installing AWS CLI
-          working_directory: /
-          command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install -y awscli
-            sudo apt-get install -y python-pip python-dev build-essential
+      - *show-current-branch-name
+      - *install-aws-cli
       - run:
           name: Deploy to AWS Cloudfront
           command: |
@@ -116,30 +106,60 @@ jobs:
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
 
+  deploy-heroku:
+    executor: app-executor
+    steps:
+      - checkout
+      - *attach_workspace
+      - *show-current-branch-name
+      - run:
+          name: Deploy to Heroku
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]
+            then
+              git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_PROD_APP}.git ${CIRCLE_BRANCH}:master -f
+            elif [ "${CIRCLE_BRANCH}" == "stage" ]
+            then
+              git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_STAGE_APP}.git ${CIRCLE_BRANCH}:master -f
+            elif [ "${CIRCLE_BRANCH}" == "development" ]
+            then
+              git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_DEV_APP}.git ${CIRCLE_BRANCH}:master -f
+            fi
+
+
 workflows:
   build_and_deploy:
     jobs:
       - install-dependencies
-      - build:
+      - deploy-heroku:
           requires:
             - install-dependencies
-      - deploy-s3:
-          requires: 
-            - build
-          filters:
-            branches:
-              only: 
-                - development
-                - stage
-                - master
-      - deploy-cloudfront:
-          requires:
-            - deploy-s3
           filters:
             branches:
               only:
                 - development
                 - stage
                 - master
+      # - build:
+      #     requires:
+      #       - install-dependencies
+      # - deploy-s3:
+      #     requires: 
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: 
+      #           - development
+      #           - stage
+      #           - master
+      # - deploy-cloudfront:
+      #     requires:
+      #       - deploy-s3
+      #     filters:
+      #       branches:
+      #         only:
+      #           - development
+      #           - stage
+      #           - master
 
            
