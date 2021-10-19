@@ -110,7 +110,7 @@ jobs:
     executor: app-executor
     steps:
       - checkout
-      - *attach_workspace
+      # - *attach_workspace
       - *show-current-branch-name
       - run:
           name: Deploy to Heroku
@@ -130,10 +130,10 @@ jobs:
 workflows:
   build_and_deploy:
     jobs:
-      - install-dependencies
+      # - install-dependencies
       - deploy-heroku:
-          requires:
-            - install-dependencies
+          # requires:
+          #   - install-dependencies
           filters:
             branches:
               only:
