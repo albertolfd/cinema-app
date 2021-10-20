@@ -140,7 +140,7 @@ workflows:
   build_and_deploy:
     jobs:
       - install-dependencies
-      - lint:
+      - lint-prettier:
           requires:
             - install-dependencies
       # - deploy-heroku:
@@ -152,7 +152,7 @@ workflows:
       #           - master
       - build:
           requires:
-            - lint
+            - lint-prettier
       - deploy-s3:
           requires: 
             - build
