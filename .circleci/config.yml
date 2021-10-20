@@ -139,15 +139,17 @@ jobs:
     executor: app-executor
     steps:
       - run:           
-          command: echo "test my app ${GIT_COMMIT_DESC}"
+          command: echo "test my app $GIT_COMMIT_DESC"
           environment: 
             GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
 
   notify-slack:
     executor: slack-executor
     steps:
-      - run: echo "Slack notification"
+      - run: echo "Slack notification"               
       - slack/notify:
+          environment: 
+            GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
           event: 'always'
           channel: 'cinema-circleci'
           template: ''
