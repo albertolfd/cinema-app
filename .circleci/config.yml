@@ -1,3 +1,6 @@
+orbs:
+  slack: circleci/slack@4.4.4
+
 version: 2.1
 
 executors:
@@ -5,6 +8,10 @@ executors:
     docker:
       - image: circleci/node:latest
     working_directory: ~/repo
+  slack-executor:
+    docker:
+      - image: 'cibuilds/base:latest'
+    resource_class: small
 
 aliases:
   - &show-current-branch-name
@@ -68,6 +75,8 @@ jobs:
 
   build:
     executor: app-executor
+    environment: 
+      GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
     steps:
       - checkout
       - *attach_workspace
@@ -126,6 +135,84 @@ jobs:
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
 
+  test:
+    executor: app-executor
+    environment: 
+      GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
+    steps:
+      - run: echo "test my app"
+
+  notify-slack:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification"
+      - slack/notify:
+          event: 'always'
+          channel: 'cinema-circleci'
+          template: ''
+          branch_pattern: development
+          mentions: '@albertolaragarcia'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${CIRCLE_BRANCH} branch deployment to aws s3 and cloudfront is completed 🎉!",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  fields: [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n${CIRCLE_BRANCH}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*When*:\n${date + '%d/%m/%Y %T'}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit*:\n${GIT_COMMIT_DESC}"
+                    }
+                  ],                  
+			            "accessory": {
+				            "type": "image",
+				            "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+				            "alt_text": "alt text for image"
+			            }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job",
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+
   deploy-heroku:
     executor: app-executor
     steps:
@@ -149,13 +236,14 @@ jobs:
 workflows:
   build_and_deploy:
     jobs:
-      - install-dependencies
-      - lint:
-          requires:
-            - install-dependencies
-      - prettier:
-          requires:
-            - install-dependencies
+      - test
+      # - install-dependencies
+      # - lint:
+      #     requires:
+      #       - install-dependencies
+      # - prettier:
+      #     requires:
+      #       - install-dependencies
       # - deploy-heroku:
       #     filters:
       #       branches:
@@ -163,27 +251,30 @@ workflows:
       #           - development
       #           - stage
       #           - master
-      - build:
+      # - build:
+      #     requires:
+      #       - lint
+      #       - prettier
+      # - deploy-s3:
+      #     requires: 
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: 
+      #           - development
+      #           - stage
+      #           - master
+      # - deploy-cloudfront:
+      #     requires:
+      #       - deploy-s3
+      #     filters:
+      #       branches:
+      #         only:
+      #           - development
+      #           - stage
+      #           - master
+      - notify-slack:
           requires:
-            - lint
-            - prettier
-      - deploy-s3:
-          requires: 
-            - build
-          filters:
-            branches:
-              only: 
-                - development
-                - stage
-                - master
-      - deploy-cloudfront:
-          requires:
-            - deploy-s3
-          filters:
-            branches:
-              only:
-                - development
-                - stage
-                - master
+            - test
 
            
