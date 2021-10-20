@@ -274,7 +274,7 @@ workflows:
       #           - stage
       #           - master
       - notify-slack:
-          context: slack-secrets
+          context: Slack
           requires:
             - test
 
