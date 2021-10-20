@@ -148,8 +148,6 @@ jobs:
     steps:
       - run: echo "Slack notification"               
       - slack/notify:
-          environment: 
-            GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
           event: 'always'
           channel: 'cinema-circleci'
           template: ''
@@ -191,7 +189,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commit*:\n${GIT_COMMIT_DESC}"
+                      "text": "*Commit*:\n$GIT_COMMIT_DESC"
                     }
                   ],
                   "accessory": {
