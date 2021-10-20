@@ -46,6 +46,16 @@ jobs:
           paths: 
             - node_modules
 
+  lint-prettier:
+    executor: app-executor
+    steps:
+      - checkout
+      - *attach_workspace
+      - *show-current-branch-name
+      - run:
+          name: Run lint & prettier
+          command: npm run lint:fix
+
   build:
     executor: app-executor
     steps:
@@ -130,6 +140,9 @@ workflows:
   build_and_deploy:
     jobs:
       - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
       # - deploy-heroku:
       #     filters:
       #       branches:
@@ -139,7 +152,7 @@ workflows:
       #           - master
       - build:
           requires:
-            - install-dependencies
+            - lint
       - deploy-s3:
           requires: 
             - build
