@@ -27,8 +27,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix --max-warnings=0 && prettier \"src/**/*.{js,ts,tsx,css,scss,less}\" --write",
-    "lint:ci": "eslint \"src/**/*.{js,ts,tsx}\" && prettier \"src/**/*.{js,ts,tsx,css,scss,less}\" --check",
+    "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix --max-warnings=0",
+    "prettier:fix": "prettier \"src/**/*.{js,ts,tsx,css,scss,less,json}\" --write",
+    "lint:ci": "eslint \"src/**/*.{js,ts,tsx}\"",
+    "prettier:ci": "prettier \"src/**/*.{js,ts,tsx,css,scss,less,json}\" --check",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
