@@ -138,8 +138,7 @@ jobs:
   test:
     executor: app-executor
     steps:
-      - run:           
-          command: echo "test my app $GIT_COMMIT_DESC"
+      - run: echo GIT_COMMIT_DESC:
           environment: 
             GIT_COMMIT_DESC: (git log --format=oneline -n 1 $CIRCLE_SHA1)
 
