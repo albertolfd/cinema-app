@@ -135,13 +135,6 @@ jobs:
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
 
-  test:
-    executor: app-executor
-    steps:
-      - run: echo GIT_COMMIT_DESC
-          environment: 
-            GIT_COMMIT_DESC: (git log --format=oneline -n 1 $CIRCLE_SHA1)
-
   notify-slack:
     executor: slack-executor
     steps:
@@ -185,10 +178,6 @@ jobs:
                     {
                       "type": "mrkdwn",
                       "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit*:\n$GIT_COMMIT_DESC"
                     }
                   ],
                   "accessory": {
@@ -236,46 +225,45 @@ jobs:
 workflows:
   build_and_deploy:
     jobs:
-      - test
-      # - install-dependencies
-      # - lint:
-      #     requires:
-      #       - install-dependencies
-      # - prettier:
-      #     requires:
-      #       - install-dependencies
-      # - deploy-heroku:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - development
-      #           - stage
-      #           - master
-      # - build:
-      #     requires:
-      #       - lint
-      #       - prettier
-      # - deploy-s3:
-      #     requires: 
-      #       - build
-      #     filters:
-      #       branches:
-      #         only: 
-      #           - development
-      #           - stage
-      #           - master
-      # - deploy-cloudfront:
-      #     requires:
-      #       - deploy-s3
-      #     filters:
-      #       branches:
-      #         only:
-      #           - development
-      #           - stage
-      #           - master
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - prettier:
+          requires:
+            - install-dependencies
+      - deploy-heroku:
+          filters:
+            branches:
+              only:
+                - development
+                - stage
+                - master
+      - build:
+          requires:
+            - lint
+            - prettier
+      - deploy-s3:
+          requires: 
+            - build
+          filters:
+            branches:
+              only: 
+                - development
+                - stage
+                - master
+      - deploy-cloudfront:
+          requires:
+            - deploy-s3
+          filters:
+            branches:
+              only:
+                - development
+                - stage
+                - master
       - notify-slack:
           context: Slack
           requires:
-            - test
+            - deploy-cloudfront
 
            
