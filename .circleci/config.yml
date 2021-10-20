@@ -140,7 +140,7 @@ jobs:
     environment: 
       GIT_COMMIT_DESC: git log --format=%B -n 1 $CIRCLE_SHA1
     steps:
-      - run: echo "test my app ${GIT_COMMIT_DESC}"
+      - run: echo "test my app $(git log --format="%s" -n 1 $CIRCLE_SHA1)"
 
   notify-slack:
     executor: slack-executor
