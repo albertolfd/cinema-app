@@ -7,6 +7,8 @@ executors:
   app-executor: # executor name. Free
     docker:
       - image: circleci/node:latest
+      - image: 'cibuilds/base:latest'
+    resource_class: small
     working_directory: ~/repo
   slack-executor:
     docker:
@@ -29,8 +31,7 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential
-  - &notify-slack-failure    
-    executor: slack-executor
+  - &notify-slack-failure
     steps:
       - run: echo "Slack failure notification"               
       - slack/notify:
