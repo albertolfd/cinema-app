@@ -31,15 +31,13 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential
-  - &notify-slack-failure
-    steps:
-      - run: echo "Slack failure notification"               
-      - slack/notify:
-          event: 'fail'
-          channel: 'cinema-circleci'
-          template: 'basic_fail_1'
-          branch_pattern: development, stage, master
-          mentions: '@albertolaragarcia'
+  - &notify-slack-failure          
+    slack/notify:
+      event: 'fail'
+      channel: 'cinema-circleci'
+      template: 'basic_fail_1'
+      branch_pattern: development, stage, master
+      mentions: '@albertolaragarcia'
       
 
 
