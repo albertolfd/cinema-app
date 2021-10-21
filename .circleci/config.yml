@@ -464,7 +464,8 @@ workflows:
           type: approval        
       - deploy-s3:
           context: Slack
-          requires: 
+          requires:
+            - build
             - pause_workflow
           filters:
             branches:
