@@ -391,7 +391,7 @@ jobs:
                         "type": "plain_text",
                         "text": "Open app"
                       },
-                      "url": "https://${STAGE_DISTRIBUTION_URL}"
+                      "url": "https://${PROD_DISTRIBUTION_URL}"
                     }
                   ]
                 }
