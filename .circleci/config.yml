@@ -398,72 +398,6 @@ jobs:
               ]
             }
 
-  # notify-slack-prod-hold:
-  #   executor: slack-executor
-  #   steps:
-  #     - run: echo "Slack notification"               
-  #     - slack/on-hold:
-  #         channel: 'circleci-prod'
-  #         template: ''
-  #         branch_pattern: prod
-  #         mentions: '@albertolaragarcia'
-  #         custom: |
-  #           {
-  #             "blocks": [
-  #               {
-  #                 "type": "header",
-  #                 "text": {
-  #                   "type": "plain_text",
-  #                   "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
-  #                   "emoji": true
-  #                 }
-  #               },
-  #               {
-  #                 "type": "section",
-  #                 "fields": [
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Branch*:\n${CIRCLE_BRANCH}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*When*:\n$(date +'%d/%m/%Y %T')"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
-  #                   }
-  #                 ],
-  #                 "accessory": {
-  #                   "type": "image",
-  #                   "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
-  #                   "alt_text": "alt text for image"
-  #                 }
-  #               },
-  #               {
-  #                 "type": "actions",
-  #                 "elements": [
-  #                   {
-  #                     "type": "button",
-  #                     "text": {
-  #                       "type": "plain_text",
-  #                       "text": "View Job"
-  #                     },
-  #                     "url": "${CIRCLE_BUILD_URL}"
-  #                   }
-  #                 ]
-  #               }
-  #             ]
-  #           }
-
   deploy-heroku:
     executor: app-executor
     steps:
@@ -509,10 +443,28 @@ workflows:
           requires:
             - lint
             - prettier
+      - slack/on-hold:
+          context: Slack
+          requires: build
+          channel: 'cinema-circleci-prod'
+          template: 'basic_on_hold_1'
+          filters:
+            branches:
+              only:
+                - master
+      - pause_workflow:
+          requires: 
+            - build
+            - slack/on-hold
+          filters:
+            branches:
+              only:
+                - master
+          type: approval        
       - deploy-s3:
           context: Slack
           requires: 
-            - build
+            - pause_workflow
           filters:
             branches:
               only: 
