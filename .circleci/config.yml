@@ -194,6 +194,14 @@ jobs:
                         "text": "View Job"
                       },
                       "url": "${CIRCLE_BUILD_URL}"
+                    },
+                    {                      
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Open app"
+                      },
+                      "url": "https://${DEV_DISTRIBUTION_URL}"
                     }
                   ]
                 }
@@ -268,7 +276,7 @@ jobs:
                         "type": "plain_text",
                         "text": "Open app"
                       },
-                      "url": "${STAGE_DISTRIBUTION_URL}"
+                      "url": "https://${STAGE_DISTRIBUTION_URL}"
                     }
                   ]
                 }
@@ -538,9 +546,17 @@ workflows:
           context: Slack
           requires:
             - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - development
       - notify-slack-stage:
           context: Slack
           requires:
             - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - stage
 
            
