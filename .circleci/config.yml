@@ -29,6 +29,17 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential
+  - &notify-slack-failure    
+    executor: slack-executor
+    steps:
+      - run: echo "Slack failure notification"               
+      - slack/notify:
+          event: 'fail'
+          channel: 'cinema-circleci'
+          template: 'basic_fail_1'
+          branch_pattern: development, stage, master
+          mentions: '@albertolaragarcia'
+      
 
 
 jobs:
@@ -62,6 +73,7 @@ jobs:
       - run:
           name: Run lint
           command: npm run lint:fix
+      - *notify-slack-failure
 
   prettier:
     executor: app-executor
@@ -207,17 +219,6 @@ jobs:
                 }
               ]
             }
-
-  notify-slack-dev-failure:
-    executor: slack-executor
-    steps:
-      - run: echo "Slack notification on dev"               
-      - slack/notify:
-          event: 'fail'
-          channel: 'cinema-circleci-dev'
-          template: 'basic_fail_1'
-          branch_pattern: development
-          mentions: '@albertolaragarcia'
   
   notify-slack-stage:
     executor: slack-executor
@@ -584,14 +585,6 @@ workflows:
                 - stage
                 - master
       - notify-slack-dev:
-          context: Slack
-          requires:
-            - deploy-cloudfront
-          filters:
-            branches:
-              only: 
-                - development
-      - notify-slack-dev-failure:
           context: Slack
           requires:
             - deploy-cloudfront
