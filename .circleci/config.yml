@@ -194,14 +194,6 @@ jobs:
                         "text": "View Job"
                       },
                       "url": "${CIRCLE_BUILD_URL}"
-                    },
-                    {                      
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "Open app"
-                      },
-                      "url": "${DEV_DISTRIBUTION_URL}"
                     }
                   ]
                 }
