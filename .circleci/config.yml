@@ -445,7 +445,8 @@ workflows:
             - prettier
       - slack/on-hold:
           context: Slack
-          requires: build
+          requires: 
+            - build
           channel: 'cinema-circleci-prod'
           template: 'basic_on_hold_1'
           filters:
