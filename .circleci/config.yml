@@ -283,72 +283,80 @@ jobs:
               ]
             }
 
-  # notify-slack-prod:
-  #   executor: slack-executor
-  #   steps:
-  #     - run: echo "Slack notification"               
-  #     - slack/notify:
-  #         event: 'pass'
-  #         channel: 'circleci-prod'
-  #         template: ''
-  #         branch_pattern: prod
-  #         mentions: '@albertolaragarcia'
-  #         custom: |
-  #           {
-  #             "blocks": [
-  #               {
-  #                 "type": "header",
-  #                 "text": {
-  #                   "type": "plain_text",
-  #                   "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
-  #                   "emoji": true
-  #                 }
-  #               },
-  #               {
-  #                 "type": "section",
-  #                 "fields": [
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Branch*:\n${CIRCLE_BRANCH}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*When*:\n$(date +'%d/%m/%Y %T')"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
-  #                   }
-  #                 ],
-  #                 "accessory": {
-  #                   "type": "image",
-  #                   "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
-  #                   "alt_text": "alt text for image"
-  #                 }
-  #               },
-  #               {
-  #                 "type": "actions",
-  #                 "elements": [
-  #                   {
-  #                     "type": "button",
-  #                     "text": {
-  #                       "type": "plain_text",
-  #                       "text": "View Job"
-  #                     },
-  #                     "url": "${CIRCLE_BUILD_URL}"
-  #                   }
-  #                 ]
-  #               }
-  #             ]
-  #           }
+  notify-slack-prod:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification on production"               
+      - slack/notify:
+          event: 'always'
+          channel: 'cinema-circleci-prod'
+          template: ''
+          branch_pattern: master
+          mentions: '@albertolaragarcia'
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\n${CIRCLE_BRANCH}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*When*:\n$(date +'%d/%m/%Y %T')"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
+                    }
+                  ],
+                  "accessory": {
+                    "type": "image",
+                    "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                    "alt_text": "alt text for image"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
+                      "url": "${CIRCLE_BUILD_URL}"
+                    },
+                    {                      
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Open app"
+                      },
+                      "url": "https://${STAGE_DISTRIBUTION_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
 
   # notify-slack-prod-fail:
   #   executor: slack-executor
@@ -558,5 +566,13 @@ workflows:
             branches:
               only: 
                 - stage
+      - notify-slack-prod:
+          context: Slack
+          requires:
+            - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - master
 
            
