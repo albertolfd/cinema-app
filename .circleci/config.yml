@@ -31,13 +31,27 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential
-  - &notify-slack-failure          
+  - &notify-slack-failure-dev        
     slack/notify:
       event: 'fail'
-      channel: 'cinema-circleci'
+      channel: 'cinema-circleci-dev'
       template: 'basic_fail_1'
-      branch_pattern: development, stage, master
+      branch_pattern: development
       mentions: '@albertolaragarcia'   
+  - &notify-slack-failure-stage        
+    slack/notify:
+      event: 'fail'
+      channel: 'cinema-circleci-stage'
+      template: 'basic_fail_1'
+      branch_pattern: stage
+      mentions: '@albertolaragarcia' 
+  - &notify-slack-failure-prod        
+    slack/notify:
+      event: 'fail'
+      channel: 'cinema-circleci-prod'
+      template: 'basic_fail_1'
+      branch_pattern: master
+      mentions: '@albertolaragarcia' 
 
 jobs:
   install-dependencies:
@@ -60,6 +74,9 @@ jobs:
           root: ./
           paths: 
             - node_modules
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   lint:
     executor: app-executor
@@ -70,7 +87,9 @@ jobs:
       - run:
           name: Run lint
           command: npm run lint:fix
-      - *notify-slack-failure
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   prettier:
     executor: app-executor
@@ -81,6 +100,9 @@ jobs:
       - run:
           name: Run prettier
           command: npm run prettier:fix
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   build:
     executor: app-executor
@@ -99,6 +121,9 @@ jobs:
           root: ./
           paths: 
             - build
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   deploy-s3:
     executor: app-executor
@@ -120,6 +145,9 @@ jobs:
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_DEV_BUCKET} --delete
             fi
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   deploy-cloudfront:
     executor: app-executor
@@ -141,6 +169,9 @@ jobs:
             then
               aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
             fi
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
 
   notify-slack-dev:
     executor: slack-executor
@@ -292,17 +323,6 @@ jobs:
               ]
             }
 
-  notify-slack-stage-failure:
-    executor: slack-executor
-    steps:
-      - run: echo "Slack notification on stage"               
-      - slack/notify:
-          event: 'fail'
-          channel: 'cinema-circleci-stage'
-          template: 'basic_fail_1'
-          branch_pattern: stage
-          mentions: '@albertolaragarcia'
-
   notify-slack-prod:
     executor: slack-executor
     steps:
@@ -377,84 +397,6 @@ jobs:
                 }
               ]
             }
-
-  notify-slack-prod-failure:
-    executor: slack-executor
-    steps:
-      - run: echo "Slack notification on production"               
-      - slack/notify:
-          event: 'fail'
-          channel: 'cinema-circleci-prod'
-          template: 'basic_fail_1'
-          branch_pattern: master
-          mentions: '@albertolaragarcia'
-
-  # notify-slack-prod-fail:
-  #   executor: slack-executor
-  #   steps:
-  #     - run: echo "Slack notification"               
-  #     - slack/notify:
-  #         event: 'fail'
-  #         channel: 'circleci-prod'
-  #         template: ''
-  #         branch_pattern: prod
-  #         mentions: '@albertolaragarcia'
-  #         custom: |
-  #           {
-  #             "blocks": [
-  #               {
-  #                 "type": "header",
-  #                 "text": {
-  #                   "type": "plain_text",
-  #                   "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
-  #                   "emoji": true
-  #                 }
-  #               },
-  #               {
-  #                 "type": "section",
-  #                 "fields": [
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Branch*:\n${CIRCLE_BRANCH}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*When*:\n$(date +'%d/%m/%Y %T')"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
-  #                   },
-  #                   {
-  #                     "type": "mrkdwn",
-  #                     "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
-  #                   }
-  #                 ],
-  #                 "accessory": {
-  #                   "type": "image",
-  #                   "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
-  #                   "alt_text": "alt text for image"
-  #                 }
-  #               },
-  #               {
-  #                 "type": "actions",
-  #                 "elements": [
-  #                   {
-  #                     "type": "button",
-  #                     "text": {
-  #                       "type": "plain_text",
-  #                       "text": "View Job"
-  #                     },
-  #                     "url": "${CIRCLE_BUILD_URL}"
-  #                   }
-  #                 ]
-  #               }
-  #             ]
-  #           }
 
   # notify-slack-prod-hold:
   #   executor: slack-executor
@@ -603,23 +545,7 @@ workflows:
             branches:
               only: 
                 - stage
-      - notify-slack-stage-failure:
-          context: Slack
-          requires:
-            - deploy-cloudfront
-          filters:
-            branches:
-              only: 
-                - stage
       - notify-slack-prod:
-          context: Slack
-          requires:
-            - deploy-cloudfront
-          filters:
-            branches:
-              only: 
-                - master
-      - notify-slack-prod-failure:
           context: Slack
           requires:
             - deploy-cloudfront
