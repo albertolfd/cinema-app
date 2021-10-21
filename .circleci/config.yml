@@ -37,9 +37,7 @@ aliases:
       channel: 'cinema-circleci'
       template: 'basic_fail_1'
       branch_pattern: development, stage, master
-      mentions: '@albertolaragarcia'
-      
-
+      mentions: '@albertolaragarcia'   
 
 jobs:
   install-dependencies:
@@ -547,11 +545,14 @@ jobs:
 workflows:
   build_and_deploy:
     jobs:
-      - install-dependencies
+      - install-dependencies:
+          context: Slack
       - lint:
+          context: Slack
           requires:
             - install-dependencies
       - prettier:
+          context: Slack
           requires:
             - install-dependencies
       # - deploy-heroku:
@@ -562,10 +563,12 @@ workflows:
       #           - stage
       #           - master
       - build:
+          context: Slack
           requires:
             - lint
             - prettier
       - deploy-s3:
+          context: Slack
           requires: 
             - build
           filters:
@@ -575,6 +578,7 @@ workflows:
                 - stage
                 - master
       - deploy-cloudfront:
+          context: Slack
           requires:
             - deploy-s3
           filters:
