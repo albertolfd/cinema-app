@@ -542,7 +542,11 @@ workflows:
                 - development
                 - stage
                 - master
-      - notify-slack:
+      - notify-slack-dev:
+          context: Slack
+          requires:
+            - deploy-cloudfront
+      - notify-slack-stage:
           context: Slack
           requires:
             - deploy-cloudfront
