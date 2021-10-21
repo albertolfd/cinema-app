@@ -138,7 +138,7 @@ jobs:
     steps:
       - run: echo "Slack notification on dev"               
       - slack/notify:
-          event: 'always'
+          event: 'pass'
           channel: 'cinema-circleci-dev'
           template: ''
           branch_pattern: development
@@ -207,13 +207,24 @@ jobs:
                 }
               ]
             }
+
+  notify-slack-dev-failure:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification on dev"               
+      - slack/notify:
+          event: 'fail'
+          channel: 'cinema-circleci-dev'
+          template: 'basic_fail_1'
+          branch_pattern: development
+          mentions: '@albertolaragarcia'
   
   notify-slack-stage:
     executor: slack-executor
     steps:
       - run: echo "Slack notification on stage"               
       - slack/notify:
-          event: 'always'
+          event: 'pass'
           channel: 'cinema-circleci-stage'
           template: ''
           branch_pattern: stage
@@ -283,12 +294,23 @@ jobs:
               ]
             }
 
+  notify-slack-stage-failure:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification on stage"               
+      - slack/notify:
+          event: 'fail'
+          channel: 'cinema-circleci-stage'
+          template: 'basic_fail_1'
+          branch_pattern: stage
+          mentions: '@albertolaragarcia'
+
   notify-slack-prod:
     executor: slack-executor
     steps:
       - run: echo "Slack notification on production"               
       - slack/notify:
-          event: 'always'
+          event: 'pass'
           channel: 'cinema-circleci-prod'
           template: ''
           branch_pattern: master
@@ -357,6 +379,17 @@ jobs:
                 }
               ]
             }
+
+  notify-slack-prod-failure:
+    executor: slack-executor
+    steps:
+      - run: echo "Slack notification on production"               
+      - slack/notify:
+          event: 'fail'
+          channel: 'cinema-circleci-prod'
+          template: 'basic_fail_1'
+          branch_pattern: master
+          mentions: '@albertolaragarcia'
 
   # notify-slack-prod-fail:
   #   executor: slack-executor
@@ -558,6 +591,14 @@ workflows:
             branches:
               only: 
                 - development
+      - notify-slack-dev-failure:
+          context: Slack
+          requires:
+            - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - development
       - notify-slack-stage:
           context: Slack
           requires:
@@ -566,7 +607,23 @@ workflows:
             branches:
               only: 
                 - stage
+      - notify-slack-stage-failure:
+          context: Slack
+          requires:
+            - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - stage
       - notify-slack-prod:
+          context: Slack
+          requires:
+            - deploy-cloudfront
+          filters:
+            branches:
+              only: 
+                - master
+      - notify-slack-prod-failure:
           context: Slack
           requires:
             - deploy-cloudfront
