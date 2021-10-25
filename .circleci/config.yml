@@ -14,6 +14,11 @@ executors:
     docker:
       - image: 'cibuilds/base:latest'
     resource_class: small
+  terraform-executor:
+    docker:
+      - image: hashicorp/terraform:latest
+      - image: 'cibuilds/base:latest'
+    resource_class: small
 
 aliases:
   - &show-current-branch-name
@@ -54,6 +59,73 @@ aliases:
       mentions: '@albertolaragarcia' 
 
 jobs:
+  terraform-validate:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform validate & format
+          command: |
+            cd infrastructure
+            terraform init
+            terraform validate
+            terraform fmt -check
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - infrastructure
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
+
+  terraform-plan-apply:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *attach_workspace
+      - *show-current-branch-name
+      - run:
+          name: Terraform plan
+          command: |     
+            cd infrastructure
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}       
+            terraform plan
+      # Hold-Approve step would be good
+      - run:
+          name: Terraform apply
+          command: |
+            cd infrastructure
+            terraform workspace select ${CIRCLE_BRANCH}       
+            terraform apply --auto-approve
+            mkdir -p outputs
+            terraform output cinema_app_bucket_name > outputs/cinema_bucket_name.txt
+            terraform output cinema-app-distribution_id > outputs/cinema-app-distribution_id.txt
+            terraform output cinema-app-distribution_domain_name > outputs/cinema-app-distribution_domain_name.txt
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - infrastructure/outputs
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
+
+  terraform-destroy:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *attach_workspace
+      - *show-current-branch-name
+      - run:
+          name: Terraform destroy
+          command: |
+            cd infrastructure
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform destroy --auto-approve
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
+
   install-dependencies:
     executor: app-executor
     steps:
@@ -135,16 +207,9 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ] 
-            then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_PROD_BUCKET} --delete
-            elif [ "${CIRCLE_BRANCH}" == "stage" ]
-            then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_STAGE_BUCKET} --delete
-            elif [ "${CIRCLE_BRANCH}" == "development" ]
-            then
-              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_DEV_BUCKET} --delete
-            fi
+            S3_BUCKET_NAME=$(cat infrastructure/outputs/cinema_bucket_name.txt | sed 's/\"//g')
+            echo $S3_BUCKET_NAME
+            aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${S3_BUCKET_NAME} --delete
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
@@ -153,22 +218,16 @@ jobs:
     executor: app-executor
     steps:
       - checkout
+      - *attach_workspace
       - *show-current-branch-name
       - *install-aws-cli
       - run:
           name: Deploy to AWS Cloudfront
           command: |
+            CLOUDFRONT_DISTRIBUTION_ID=$(cat infrastructure/outputs/cinema-app-distribution_id.txt | sed 's/\"//g')
+            echo $CLOUDFRONT_DISTRIBUTION_ID
             aws configure set preview.cloudfront true
-            if [ "${CIRCLE_BRANCH}" == "master" ] 
-            then
-              aws cloudfront create-invalidation --distribution-id ${PROD_DISTRIBUTION_ID} --paths /\*
-            elif [ "${CIRCLE_BRANCH}" == "stage" ]
-            then
-              aws cloudfront create-invalidation --distribution-id ${STAGE_DISTRIBUTION_ID} --paths /\*
-            elif [ "${CIRCLE_BRANCH}" == "development" ]
-            then
-              aws cloudfront create-invalidation --distribution-id ${DEV_DISTRIBUTION_ID} --paths /\*
-            fi
+            aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths /\*
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
@@ -176,7 +235,13 @@ jobs:
   notify-slack-dev:
     executor: slack-executor
     steps:
-      - run: echo "Slack notification on dev"               
+      - run: echo "Slack notification on dev"
+      - *attach_workspace
+      - run:
+          name: Set distribution domain name
+          command: |
+            echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
+      - run: echo $DISTRIBUTION_URL       
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-dev'
@@ -241,7 +306,7 @@ jobs:
                         "type": "plain_text",
                         "text": "Open app"
                       },
-                      "url": "https://${DEV_DISTRIBUTION_URL}"
+                      "url": "https://${DISTRIBUTION_URL}"
                     }
                   ]
                 }
@@ -252,6 +317,12 @@ jobs:
     executor: slack-executor
     steps:
       - run: echo "Slack notification on stage"               
+      - *attach_workspace
+      - run:
+          name: Set distribution domain name
+          command: |
+            echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
+      - run: echo $DISTRIBUTION_URL
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-stage'
@@ -316,7 +387,7 @@ jobs:
                         "type": "plain_text",
                         "text": "Open app"
                       },
-                      "url": "https://${STAGE_DISTRIBUTION_URL}"
+                      "url": "https://${DISTRIBUTION_URL}"
                     }
                   ]
                 }
@@ -327,6 +398,12 @@ jobs:
     executor: slack-executor
     steps:
       - run: echo "Slack notification on production"               
+      - *attach_workspace
+      - run:
+          name: Set distribution domain name
+          command: echo $DISTRIBUTION_URL
+          environment:
+            DISTRIBUTION_URL: $(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')         
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-prod'
@@ -391,7 +468,7 @@ jobs:
                         "type": "plain_text",
                         "text": "Open app"
                       },
-                      "url": "https://${PROD_DISTRIBUTION_URL}"
+                      "url": "https://${DISTRIBUTION_URL}"
                     }
                   ]
                 }
@@ -417,10 +494,27 @@ jobs:
               git push https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_DEV_APP}.git ${CIRCLE_BRANCH}:master -f
             fi
 
-
 workflows:
   build_and_deploy:
     jobs:
+      - terraform-validate:
+          context: Slack
+          filters:
+            branches:
+              only: 
+                - development
+                - stage
+                - master
+      - terraform-plan-apply:
+          context: Slack
+          requires:
+            - terraform-validate
+          filters:
+            branches:
+              only: 
+                - development
+                - stage
+                - master
       - install-dependencies:
           context: Slack
       - lint:
@@ -431,6 +525,7 @@ workflows:
           context: Slack
           requires:
             - install-dependencies
+      # Heroku does not need the build job
       # - deploy-heroku:
       #     filters:
       #       branches:
@@ -467,6 +562,7 @@ workflows:
           requires:
             - build
             - pause_workflow
+            - terraform-plan-apply
           filters:
             branches:
               only: 
@@ -507,5 +603,20 @@ workflows:
             branches:
               only: 
                 - master
+      - terraform-destroy-hold:
+          type: approval
+          requires:
+            - deploy-cloudfront
+      - terraform-destroy:
+          context: Slack
+          requires:
+            - terraform-destroy-hold
+          filters:
+            branches:
+              only: 
+                - development
+                - stage
+                - master
+
 
            
