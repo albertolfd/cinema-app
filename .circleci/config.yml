@@ -85,19 +85,18 @@ jobs:
       - checkout
       - *attach_workspace
       - *show-current-branch-name
-      - run: 
-          name: Create terraform workspace
-          command: |
-            cd infrastructure
-            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
       - run:
-          name: Terraform plan & apply
-          command: |            
+          name: Terraform plan
+          command: |     
+            cd infrastructure
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}       
             terraform plan
       # Hold-Approve step would be good
       - run:
           name: Terraform apply
           command: |
+            cd infrastructure
+            terraform workspace select ${CIRCLE_BRANCH}       
             terraform apply --auto-approve
             terraform output cinema_app_bucket_name > ./outputs/cinema_bucket_name.txt
             terraform output cinema-app-distribution_id > ./outputs/cinema-app-distribution_id.txt
