@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "cinema_app_s3_bucket" {
 }
 
 resource "aws_s3_bucket_public_access_block" "cinema_app_s3_bucket_block_access" {
-  bucket = aws_s3_bucket.cinema_app_s3_bucket
+  bucket = aws_s3_bucket.cinema_app_s3_bucket.id
 
   block_public_acls   = true
   block_public_policy = true
