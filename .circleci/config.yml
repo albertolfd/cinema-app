@@ -98,9 +98,10 @@ jobs:
             cd infrastructure
             terraform workspace select ${CIRCLE_BRANCH}       
             terraform apply --auto-approve
-            terraform output cinema_app_bucket_name > ./outputs/cinema_bucket_name.txt
-            terraform output cinema-app-distribution_id > ./outputs/cinema-app-distribution_id.txt
-            terraform output cinema-app-distribution_domain_name > ./outputs/cinema-app-distribution_domain_name.txt
+            mkdir -p outputs
+            terraform output cinema_app_bucket_name > outputs/cinema_bucket_name.txt
+            terraform output cinema-app-distribution_id > outputs/cinema-app-distribution_id.txt
+            terraform output cinema-app-distribution_domain_name > outputs/cinema-app-distribution_domain_name.txt
       - persist_to_workspace:
           root: ./
           paths:
