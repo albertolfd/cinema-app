@@ -239,9 +239,9 @@ jobs:
       - *attach_workspace
       - run:
           name: Set distribution domain name
-          command: echo $DISTRIBUTION_URL
-          environment:
-            DISTRIBUTION_URL: $(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')         
+          command: |
+            echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
+      - run: echo $DISTRIBUTION_URL       
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-dev'
@@ -320,9 +320,9 @@ jobs:
       - *attach_workspace
       - run:
           name: Set distribution domain name
-          command: echo $DISTRIBUTION_URL
-          environment:
-            DISTRIBUTION_URL: $(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')         
+          command: |
+            echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
+      - run: echo $DISTRIBUTION_URL
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-stage'
