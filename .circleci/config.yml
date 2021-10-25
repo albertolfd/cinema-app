@@ -208,8 +208,8 @@ jobs:
           name: Deploy to AWS S3
           command: |
             S3_BUCKET_NAME=$(cat infrastructure/outputs/cinema_bucket_name.txt | sed 's/\"//g')
-            echo $AWS_BUCKET_NAME
-            aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_NAME} --delete
+            echo $S3_BUCKET_NAME
+            aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${S3_BUCKET_NAME} --delete
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
