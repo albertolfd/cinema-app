@@ -1,20 +1,8 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
+  background-color: #7642ca;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,15 +12,122 @@
   color: white;
 }
 
+.card-container {
+  margin-top: -130px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ballons1 {
+  height: 165px;
+  width: 172px;
+  position: absolute;
+  top: -75px;
+  right: -25px;
+}
+
+.ballons2 {
+  height: 165px;
+  width: 172px;
+  position: absolute;
+  transform: scaleX(-1);
+  top: -75px;
+  left: -25px;
+}
+
+.happy-birthday-text {
+  color: rgb(214, 42, 108);
+  font-size: 50px;
+  font-weight: bold;
+  font-family: cursive;
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.name-text {
+  color: rgb(235, 221, 31);
+  font-size: 50px;
+  font-weight: bold;
+  font-family: cursive;
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.party-popper1 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  bottom: -75px;
+  left: 5px;
+  animation-name: flip;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper2 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  transform: scaleX(-1);
+  bottom: -75px;
+  right: 5px;
+  animation-name: flip2;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper3 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  bottom: -75px;
+  left: 85px;
+  animation-name: flip;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper4 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  transform: scaleX(-1);
+  bottom: -75px;
+  right: 85px;
+  animation-name: flip2;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.App-link-div {
+  position: absolute;
+  bottom: -140px;
+}
+
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes flip {
+  0% {
+    transform: scaleX(1);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes flip2 {
+  0% {
+    transform: scaleX(-1);
+  }
+  50% {
+    transform: scaleX(1);
   }
 }

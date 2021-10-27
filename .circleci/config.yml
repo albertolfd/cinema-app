@@ -401,9 +401,9 @@ jobs:
       - *attach_workspace
       - run:
           name: Set distribution domain name
-          command: echo $DISTRIBUTION_URL
-          environment:
-            DISTRIBUTION_URL: $(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')         
+          command: |
+            echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
+      - run: echo $DISTRIBUTION_URL      
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-prod'
@@ -603,20 +603,20 @@ workflows:
             branches:
               only: 
                 - master
-      - terraform-destroy-hold:
-          type: approval
-          requires:
-            - deploy-cloudfront
-      - terraform-destroy:
-          context: Slack
-          requires:
-            - terraform-destroy-hold
-          filters:
-            branches:
-              only: 
-                - development
-                - stage
-                - master
+      # - terraform-destroy-hold:
+      #     type: approval
+      #     requires:
+      #       - deploy-cloudfront
+      # - terraform-destroy:
+      #     context: Slack
+      #     requires:
+      #       - terraform-destroy-hold
+      #     filters:
+      #       branches:
+      #         only: 
+      #           - development
+      #           - stage
+      #           - master
 
 
            
