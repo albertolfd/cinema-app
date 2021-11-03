@@ -6,7 +6,7 @@ version: 2.1
 executors:
   app-executor: # executor name. Free
     docker:
-      - image: circleci/node:14.0.0
+      - image: circleci/node:14.15.0
       - image: 'cibuilds/base:latest'
     resource_class: small
     working_directory: ~/repo
