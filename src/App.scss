@@ -1,0 +1,133 @@
+.App {
+  text-align: center;
+}
+.App-header {
+  background-color: #7642ca;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.card-container {
+  margin-top: -130px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ballons1 {
+  height: 165px;
+  width: 172px;
+  position: absolute;
+  top: -75px;
+  right: -25px;
+}
+
+.ballons2 {
+  height: 165px;
+  width: 172px;
+  position: absolute;
+  transform: scaleX(-1);
+  top: -75px;
+  left: -25px;
+}
+
+.happy-birthday-text {
+  color: rgb(214, 42, 108);
+  font-size: 50px;
+  font-weight: bold;
+  font-family: cursive;
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.name-text {
+  color: rgb(235, 221, 31);
+  font-size: 50px;
+  font-weight: bold;
+  font-family: cursive;
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.party-popper1 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  bottom: -75px;
+  left: 5px;
+  animation-name: flip;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper2 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  transform: scaleX(-1);
+  bottom: -75px;
+  right: 5px;
+  animation-name: flip2;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper3 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  bottom: -75px;
+  left: 85px;
+  animation-name: flip;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.party-popper4 {
+  height: 75px;
+  width: 75px;
+  position: absolute;
+  transform: scaleX(-1);
+  bottom: -75px;
+  right: 85px;
+  animation-name: flip2;
+  animation-duration: 1.5s;
+  animation-timing-function: step-end;
+  animation-iteration-count: infinite;
+}
+
+.App-link-div {
+  position: absolute;
+  bottom: -140px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes flip {
+  0% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes flip2 {
+  0% {
+    transform: scaleX(-1);
+  }
+  50% {
+    transform: scaleX(1);
+  }
+}

@@ -1,0 +1,17 @@
+.searchField .MuiOutlinedInput-root {
+  color: #9dbfaf;
+}
+
+.searchField .MuiInputBase-input {
+  padding: 7.5px 14px;
+}
+
+.searchField .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #87ad9c;
+  border-width: 1.5px;
+}
+
+.searchField .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #87ad9c;
+  border-width: 2px;
+}
