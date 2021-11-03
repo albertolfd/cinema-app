@@ -135,7 +135,7 @@ jobs:
           key: app-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json"}}
       - run:
           name: Install dependencies
-          command: npm install
+          command: yarn install
       - save_cache:
           paths:
             - node_modules
@@ -156,7 +156,7 @@ jobs:
       - *show-current-branch-name
       - run:
           name: Run lint
-          command: npm run lint:fix
+          command: yarn lint:fix
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
@@ -169,7 +169,7 @@ jobs:
       - *show-current-branch-name
       - run:
           name: Run prettier
-          command: npm run prettier:fix
+          command: yarn prettier:fix
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
@@ -183,7 +183,7 @@ jobs:
       - run:
           name: Build project
           command: |
-            npm run build
+            yarn build
             cd build
             zip ../build.zip -r * .[^.]*
             echo "Build succesful"
