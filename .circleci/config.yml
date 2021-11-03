@@ -132,9 +132,7 @@ jobs:
       - checkout
       - *show-current-branch-name
       - restore_cache:
-          keys:
-            - app-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json"}}
-            - app-
+          key: app-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json"}}
       - run:
           name: Install dependencies
           command: npm install
