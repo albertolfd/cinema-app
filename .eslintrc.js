@@ -46,7 +46,8 @@ module.exports = {
           devDependencies: ['**/*.stories.tsx']
         }
       ],
-      "no-return-assign": 0
+      "no-return-assign": 0,
+      "react/require-default-props": 0
     },
     settings: {
       react: {
