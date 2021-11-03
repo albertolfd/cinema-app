@@ -36,27 +36,27 @@ aliases:
         sudo apt-get -y -qq update
         sudo apt-get install -y awscli
         sudo apt-get install -y python-pip python-dev build-essential
-  - &notify-slack-failure-dev        
+  - &notify-slack-failure-dev
     slack/notify:
       event: 'fail'
       channel: 'cinema-circleci-dev'
       template: 'basic_fail_1'
       branch_pattern: development
-      mentions: '@albertolaragarcia'   
-  - &notify-slack-failure-stage        
+      mentions: '@albertolaragarcia'
+  - &notify-slack-failure-stage
     slack/notify:
       event: 'fail'
       channel: 'cinema-circleci-stage'
       template: 'basic_fail_1'
       branch_pattern: stage
-      mentions: '@albertolaragarcia' 
-  - &notify-slack-failure-prod        
+      mentions: '@albertolaragarcia'
+  - &notify-slack-failure-prod
     slack/notify:
       event: 'fail'
       channel: 'cinema-circleci-prod'
       template: 'basic_fail_1'
       branch_pattern: master
-      mentions: '@albertolaragarcia' 
+      mentions: '@albertolaragarcia'
 
 jobs:
   terraform-validate:
@@ -87,7 +87,7 @@ jobs:
       - *show-current-branch-name
       - run:
           name: Terraform plan
-          command: |     
+          command: |
             cd infrastructure
             terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}       
             terraform plan
@@ -133,7 +133,7 @@ jobs:
       - *show-current-branch-name
       - restore_cache:
           keys:
-            - app-{{ checksum "package.json"}}
+            - app-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json"}}
             - app-
       - run:
           name: Install dependencies
@@ -141,10 +141,10 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: app-{{ checksum "package.json"}}
+          key: app-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json"}}
       - persist_to_workspace:
           root: ./
-          paths: 
+          paths:
             - node_modules
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
@@ -188,10 +188,10 @@ jobs:
             npm run build
             cd build
             zip ../build.zip -r * .[^.]*
-            echo "Build succesful"            
+            echo "Build succesful"
       - persist_to_workspace:
           root: ./
-          paths: 
+          paths:
             - build
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
@@ -241,7 +241,7 @@ jobs:
           name: Set distribution domain name
           command: |
             echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
-      - run: echo $DISTRIBUTION_URL       
+      - run: echo $DISTRIBUTION_URL
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-dev'
@@ -312,11 +312,11 @@ jobs:
                 }
               ]
             }
-  
+
   notify-slack-stage:
     executor: slack-executor
     steps:
-      - run: echo "Slack notification on stage"               
+      - run: echo "Slack notification on stage"
       - *attach_workspace
       - run:
           name: Set distribution domain name
@@ -397,13 +397,13 @@ jobs:
   notify-slack-prod:
     executor: slack-executor
     steps:
-      - run: echo "Slack notification on production"               
+      - run: echo "Slack notification on production"
       - *attach_workspace
       - run:
           name: Set distribution domain name
           command: |
             echo "export DISTRIBUTION_URL=\"$(cat infrastructure/outputs/cinema-app-distribution_domain_name.txt | sed 's/\"//g')\"" >> $BASH_ENV
-      - run: echo $DISTRIBUTION_URL      
+      - run: echo $DISTRIBUTION_URL
       - slack/notify:
           event: 'pass'
           channel: 'cinema-circleci-prod'
@@ -501,7 +501,7 @@ workflows:
           context: Slack
           filters:
             branches:
-              only: 
+              only:
                 - development
                 - stage
                 - master
@@ -511,7 +511,7 @@ workflows:
             - terraform-validate
           filters:
             branches:
-              only: 
+              only:
                 - development
                 - stage
                 - master
@@ -540,7 +540,7 @@ workflows:
             - prettier
       - slack/on-hold:
           context: Slack
-          requires: 
+          requires:
             - build
           channel: 'cinema-circleci-prod'
           template: 'basic_on_hold_1'
@@ -549,14 +549,14 @@ workflows:
               only:
                 - master
       - pause_workflow:
-          requires: 
+          requires:
             - build
             - slack/on-hold
           filters:
             branches:
               only:
                 - master
-          type: approval        
+          type: approval
       - deploy-s3:
           context: Slack
           requires:
@@ -565,7 +565,7 @@ workflows:
             - terraform-plan-apply
           filters:
             branches:
-              only: 
+              only:
                 - development
                 - stage
                 - master
@@ -585,7 +585,7 @@ workflows:
             - deploy-cloudfront
           filters:
             branches:
-              only: 
+              only:
                 - development
       - notify-slack-stage:
           context: Slack
@@ -593,7 +593,7 @@ workflows:
             - deploy-cloudfront
           filters:
             branches:
-              only: 
+              only:
                 - stage
       - notify-slack-prod:
           context: Slack
@@ -601,7 +601,7 @@ workflows:
             - deploy-cloudfront
           filters:
             branches:
-              only: 
+              only:
                 - master
       # - terraform-destroy-hold:
       #     type: approval
@@ -613,10 +613,7 @@ workflows:
       #       - terraform-destroy-hold
       #     filters:
       #       branches:
-      #         only: 
+      #         only:
       #           - development
       #           - stage
       #           - master
-
-
-           
