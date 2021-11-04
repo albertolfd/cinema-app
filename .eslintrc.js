@@ -47,7 +47,10 @@ module.exports = {
         }
       ],
       "no-return-assign": 0,
-      "react/require-default-props": 0
+      "react/require-default-props": 0,
+      "jsx-a11y/click-events-have-key-events": 0,
+      "jsx-a11y/no-noninteractive-element-interactions": 0,
+      "no-plusplus": 0
     },
     settings: {
       react: {

@@ -6,7 +6,7 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import Header from 'views/Header/Header';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import theme from 'themes/GlobalTheme';
-import App from './App';
+import MovieCatalogue from 'routes/MovieCatalogue';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
@@ -17,7 +17,7 @@ ReactDOM.render(
           <Switch>
             <Header>
               <Route>
-                <App />
+                <MovieCatalogue />
               </Route>
             </Header>
           </Switch>
