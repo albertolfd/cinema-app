@@ -1,0 +1,140 @@
+.carouselRoot {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.galleryContainer {
+  position: relative;
+  display: flex;
+  height: 93%;
+}
+
+.itemContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+.arrowContainer {
+  position: absolute;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  width: 40px;
+  cursor: pointer;
+}
+
+.prevArrowContainer {
+  left: 0;
+
+  &:hover {
+    background: rgba(8, 8, 8, 0.794);
+  }
+}
+
+.nextArrowContainer {
+  right: 0;
+
+  &:hover {
+    background: rgba(8, 8, 8, 0.794);
+  }
+}
+
+.arrow {
+  position: absolute;
+  cursor: pointer;
+  height: 40px;
+  width: 21px;
+
+  &::after,
+  &::before {
+    background: #fff;
+    border-radius: 3px;
+    content: '';
+    height: 23px;
+    position: absolute;
+    width: 5px;
+    left: 8px;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+}
+
+.arrowHover {
+  height: 50px;
+
+  &::after {
+    background: rgb(216, 232, 235);
+    height: 30px;
+    width: 8px;
+  }
+
+  &::before {
+    background: rgb(216, 232, 235);
+    height: 30px;
+    width: 8px;
+  }
+}
+
+.prevArrow {
+  left: 10px;
+
+  &::before {
+    transform: rotate(30deg);
+  }
+
+  &::after {
+    transform: rotate(-30deg);
+  }
+}
+
+.nextArrow {
+  right: 10px;
+
+  &::before {
+    transform: rotate(-30deg);
+  }
+
+  &::after {
+    transform: rotate(30deg);
+  }
+}
+
+.indicatorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.indicator {
+  border-radius: 50%;
+  border: none;
+  height: 6px;
+  width: 6px;
+  background: #345;
+  cursor: pointer;
+  opacity: 0.5;
+  position: relative;
+  margin: 5px;
+  padding: 0;
+}
+
+.activeIndicator {
+  opacity: 1;
+  height: 12px;
+  width: 12px;
+}
