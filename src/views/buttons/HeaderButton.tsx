@@ -12,8 +12,8 @@ interface HeaderButtonProps {
 
 const StyledHeaderButton = styled(Button)`
   color: #9aa9bb;
-
   font-size: 16px;
+  text-transform: none;
 `;
 
 const HeaderButton: FC<HeaderButtonProps> = (props: HeaderButtonProps) => {

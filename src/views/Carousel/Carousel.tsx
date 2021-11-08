@@ -86,6 +86,9 @@ const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
   return (
     <div className={styles.carouselRoot}>
       <div className={styles.galleryContainer}>
+        {
+          // #region Previous arrow
+        }
         <div
           className={`${styles.arrowContainer} ${styles.prevArrowContainer}`}
           onClick={handlePrevious}
@@ -99,9 +102,16 @@ const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
             }`}
           />
         </div>
+        {
+          // #endregion
+        }
 
+        {/** Carousel item */}
         <div className={`${styles.itemContainer} ${styles.noselect}`}>{items[currentIndex]}</div>
 
+        {
+          // #region Next arrow
+        }
         <div
           className={`${styles.arrowContainer} ${styles.nextArrowContainer}`}
           onClick={handleNext}
@@ -115,8 +125,12 @@ const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
             }`}
           />
         </div>
+        {
+          // #endregion
+        }
       </div>
 
+      {/** Indicators */}
       <div className={styles.indicatorContainer}>{indicators}</div>
     </div>
   );

@@ -3,7 +3,6 @@ import React, { FC, useEffect, useState } from 'react';
 import AnimatedGradientBar from 'views/AnimatedGradientBar/AnimatedGradientBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import IMAGES from 'assets/AssetCatalogue';
-import styles from './Header.module.scss';
 import HeaderNavigation from './HeaderNavigation';
 
 const GRADIENT_BAR_HEIGHT = 5;
@@ -24,49 +23,53 @@ const Header: FC = ({ children }) => {
 
   return (
     <>
-      <Grid container position="fixed" direction="column">
-        <Grid item>
-          <AnimatedGradientBar
-            height={GRADIENT_BAR_HEIGHT}
-            gradient="linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)"
-          />
-        </Grid>
+      <AppBar>
+        <Box width="100%">
+          <Grid container direction="column">
+            <Grid item>
+              <AnimatedGradientBar
+                height={GRADIENT_BAR_HEIGHT}
+                gradient="linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)"
+              />
+            </Grid>
 
-        <Grid item>
-          <AppBar position="relative" sx={{ height: HEADER_HEIGHT }} className={styles.header}>
-            <div className={styles.logo}>
-              <img src={IMAGES.APP_LOGO} alt="cinema-app-logo" style={{ width: 160 }} />
-            </div>
+            <Grid item container alignItems="center" padding="0px 2%" height={HEADER_HEIGHT}>
+              <Grid item flexGrow={1}>
+                <img src={IMAGES.APP_LOGO} alt="cinema-app-logo" style={{ width: 160 }} />
+              </Grid>
 
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <HeaderNavigation />
-            </Box>
+              <Grid item>
+                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                  <HeaderNavigation />
+                </Box>
 
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton onClick={handleMenuOpen}>
-                <MenuIcon />
-              </IconButton>
-            </Box>
+                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                  <IconButton onClick={handleMenuOpen}>
+                    <MenuIcon />
+                  </IconButton>
+                </Box>
+              </Grid>
 
-            <Drawer
-              open={isMobileScreen && mobileMenuOpen}
-              anchor="right"
-              onClose={handleMenuOpen}
-              hideBackdrop
-              sx={{ top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT }}
-              PaperProps={{
-                sx: { top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT, boxShadow: 'none' }
-              }}
-            >
-              <Box padding="25px 10px">
-                <HeaderNavigation displayDirection="column" />
-              </Box>
-            </Drawer>
-          </AppBar>
-        </Grid>
+              <Drawer
+                open={isMobileScreen && mobileMenuOpen}
+                anchor="right"
+                onClose={handleMenuOpen}
+                hideBackdrop
+                sx={{ top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT }}
+                PaperProps={{
+                  sx: { top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT, boxShadow: 'none' }
+                }}
+              >
+                <Box padding="25px 10px">
+                  <HeaderNavigation displayDirection="column" />
+                </Box>
+              </Drawer>
+            </Grid>
+          </Grid>
+        </Box>
+      </AppBar>
 
-        <Grid item>{children}</Grid>
-      </Grid>
+      <Box marginTop={`${GRADIENT_BAR_HEIGHT + HEADER_HEIGHT}px`}>{children}</Box>
     </>
   );
 };

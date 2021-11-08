@@ -67,6 +67,13 @@ const theme = createTheme({
           backgroundColor: '#fff'
         }
       }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'uppercase'
+        }
+      }
     }
   }
 });
@@ -80,7 +87,8 @@ const GlobalTheme = createTheme(theme, {
           style: {
             color: '#9aa9bb',
             fontSize: 16,
-            padding: '6px 8px'
+            padding: '6px 8px',
+            textTransform: 'none'
           }
         },
         {
