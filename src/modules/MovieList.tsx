@@ -1,4 +1,4 @@
-import { Box, Button, Typography, Grid, Divider } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import React, { FC } from 'react';
 import { Movie } from 'routes/MovieCatalogue';
 import DividerView from 'views/Divider/DividerView';
