@@ -11,13 +11,13 @@ const HEADER_HEIGHT = 56;
 const Header: FC = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const theme = useTheme();
-  const isMobileScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isMediumSizeScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
-    if (!isMobileScreen) {
+    if (!isMediumSizeScreen) {
       setMobileMenuOpen(false);
     }
-  }, [isMobileScreen]);
+  }, [isMediumSizeScreen]);
 
   const handleMenuOpen = () => setMobileMenuOpen(!mobileMenuOpen);
 
@@ -39,11 +39,11 @@ const Header: FC = ({ children }) => {
               </Grid>
 
               <Grid item>
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Box sx={{ display: `${isMediumSizeScreen ? 'none' : 'flex'}` }}>
                   <HeaderNavigation />
                 </Box>
 
-                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                <Box sx={{ display: `${isMediumSizeScreen ? 'flex' : 'none'}` }}>
                   <IconButton onClick={handleMenuOpen}>
                     <MenuIcon />
                   </IconButton>
@@ -51,7 +51,7 @@ const Header: FC = ({ children }) => {
               </Grid>
 
               <Drawer
-                open={isMobileScreen && mobileMenuOpen}
+                open={isMediumSizeScreen && mobileMenuOpen}
                 anchor="right"
                 onClose={handleMenuOpen}
                 hideBackdrop

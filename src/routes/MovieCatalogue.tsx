@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
+import MovieList from 'modules/MovieList';
 import React, { FC } from 'react';
 import Carousel from 'views/Carousel/Carousel';
-import MovieList from 'views/MovieList/MovieList';
 import styles from './MovieCatalogue.module.scss';
 
 export interface Movie {

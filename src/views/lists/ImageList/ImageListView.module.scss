@@ -1,4 +1,4 @@
-.movieList {
+.imageList {
   overflow: visible;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .listItem:hover {
-  transform: translateY(-3px) scale(1.1);
+  transform: translateY(-3px) scale(1.07);
 }
 
 .listItem:hover .moreButton {
@@ -17,6 +17,7 @@
 
 .listItemImage {
   border-radius: 7px;
+  max-height: 100%;
 }
 
 .listItemBar {
