@@ -1,0 +1,21 @@
+.ratingRoot {
+  display: flex;
+  align-items: center;
+}
+
+.starsContainer {
+  position: relative;
+  width: fit-content;
+  margin-right: 8px;
+}
+
+.hollowStarsContainer {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+}
+
+.ratingNumber {
+  font-size: 16px;
+  font-weight: normal;
+}

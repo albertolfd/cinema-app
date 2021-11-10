@@ -29,11 +29,11 @@ const theme = createTheme({
       main: '#dd003f'
     },
     secondary: {
-      main: '#dcf836'
+      main: '#fff'
     },
     text: {
       primary: '#fff',
-      secondary: '#dd003f'
+      secondary: '#dcf836'
     }
   },
   typography: {
@@ -53,9 +53,9 @@ const theme = createTheme({
   },
   breakpoints: {
     values: {
-      xs: 0,
-      sm: 600,
-      md: 830,
+      xs: 580,
+      sm: 700,
+      md: 860,
       lg: 1200,
       xl: 1536
     }
@@ -65,6 +65,15 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: '#fff'
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'uppercase',
+          fontWeight: 'bold',
+          fontSize: 16
         }
       }
     }
@@ -79,8 +88,9 @@ const GlobalTheme = createTheme(theme, {
           props: { variant: 'header' },
           style: {
             color: '#9aa9bb',
-            fontSize: 16,
-            padding: '6px 8px'
+            padding: '6px 8px',
+            textTransform: 'none',
+            fontWeight: 'normal'
           }
         },
         {
