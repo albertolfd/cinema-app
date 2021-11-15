@@ -1,7 +1,13 @@
 import { Button, Pagination, Stack, useMediaQuery, useTheme } from '@mui/material';
 import React, { FC } from 'react';
+import SkeletonView from 'views/loadingIndicators/SkeletonView/SkeletonView';
 
-const PaginationView: FC = () => {
+interface PaginationViewProps {
+  loading?: boolean;
+}
+
+const PaginationView: FC<PaginationViewProps> = (props: PaginationViewProps) => {
+  const { loading } = props;
   const theme = useTheme();
 
   const isMediumSizeScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -10,7 +16,9 @@ const PaginationView: FC = () => {
 
   return (
     <>
-      {isMobileScreen ? (
+      {loading ? (
+        <SkeletonView variant="text" width="30vw" height="35px" />
+      ) : isMobileScreen ? (
         <Stack direction="row" spacing={2}>
           <Button variant="contained">Prev</Button>
           <Button variant="contained">Next</Button>

@@ -1,0 +1,16 @@
+interface Movie {
+  poster_path: string;
+  overview: string;
+  release_date: Date;
+  genre_ids: Array<number>;
+  id: number;
+  original_title: string;
+  original_language: string;
+  title: string;
+  backdrop_path: string;
+  popularity: number;
+  vote_count: number;
+  vote_average: number;
+}
+
+export default Movie;

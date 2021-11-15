@@ -7,23 +7,34 @@ import Header from 'views/Header/Header';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import theme from 'themes/GlobalTheme';
 import MovieCatalogue from 'routes/MovieCatalogue';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import Theater from 'routes/Theater';
 import reportWebVitals from './reportWebVitals';
+
+// Create React Query client
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <StyledEngineProvider injectFirst>
-        <Router>
-          <Switch>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <StyledEngineProvider injectFirst>
+          <Router>
             <Header>
-              <Route>
-                <MovieCatalogue />
-              </Route>
+              <Switch>
+                <Route path="/movieCatalogue">
+                  <MovieCatalogue />
+                </Route>
+
+                <Route>
+                  <Theater />
+                </Route>
+              </Switch>
             </Header>
-          </Switch>
-        </Router>
-      </StyledEngineProvider>
-    </ThemeProvider>
+          </Router>
+        </StyledEngineProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
