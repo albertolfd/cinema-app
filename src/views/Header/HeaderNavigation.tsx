@@ -1,5 +1,5 @@
 import { Button, Grid } from '@mui/material';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import HeaderButton from 'views/buttons/HeaderButton/HeaderButton';
 import SearchField from 'views/fields/SearchField/SearchField';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
@@ -12,14 +12,27 @@ import styles from './HeaderNavigation.module.scss';
 
 interface HeaderNavigationProps {
   displayDirection?: 'row' | 'column';
+  onNavigateHandler?: () => void;
 }
 
 const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProps) => {
-  const { displayDirection } = props;
+  const { displayDirection, onNavigateHandler } = props;
 
   const history = useHistory();
 
   const rootFlexDirection = displayDirection ?? 'row';
+
+  const [activeCategory, setActiveCategory] = useState(MovieCategory.NOW_PLAYING);
+
+  const onClickHandler = (path: string, category: MovieCategory) => {
+    setActiveCategory(category);
+
+    if (onNavigateHandler) {
+      onNavigateHandler();
+    }
+
+    history.push(path, { category });
+  };
 
   return (
     <Grid
@@ -31,9 +44,10 @@ const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProp
     >
       <Grid item>
         <HeaderButton
-          label="Now Playing"
+          label={MovieCategory.NOW_PLAYING}
           Icon={LocalMoviesIcon}
-          onClickHandler={() => history.push('/', { category: MovieCategory.NOW_PLAYING })}
+          className={activeCategory === MovieCategory.NOW_PLAYING ? styles.activeItem : undefined}
+          onClickHandler={() => onClickHandler('/', MovieCategory.NOW_PLAYING)}
         />
       </Grid>
 
@@ -41,29 +55,31 @@ const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProp
         <Button
           variant="header"
           startIcon={<ControlPointIcon />}
-          onClick={() => history.push('/', { category: MovieCategory.UPCOMING })}
+          onClick={() => onClickHandler('/', MovieCategory.UPCOMING)}
+          className={activeCategory === MovieCategory.UPCOMING ? styles.activeItem : undefined}
         >
-          Upcoming
+          {MovieCategory.UPCOMING}
         </Button>
       </Grid>
 
       <Grid item>
         <HeaderButton
-          label="Popular"
+          label={MovieCategory.POPULAR}
           Icon={LocalFireDepartmentIcon}
-          onClickHandler={() =>
-            history.push('/movieCatalogue', { category: MovieCategory.POPULAR })
-          }
+          onClickHandler={() => onClickHandler('/movieCatalogue', MovieCategory.POPULAR)}
+          className={activeCategory === MovieCategory.POPULAR ? styles.activeItem : undefined}
         />
       </Grid>
 
       <Grid item>
         <Button
-          className={styles.headerText}
+          className={`${styles.headerText} ${
+            activeCategory === MovieCategory.TOP_RATED ? styles.activeItem : ''
+          }`}
           startIcon={<StarIcon />}
-          onClick={() => history.push('/movieCatalogue', { category: MovieCategory.TOP_RATED })}
+          onClick={() => onClickHandler('/movieCatalogue', MovieCategory.TOP_RATED)}
         >
-          Top Rated
+          {MovieCategory.TOP_RATED}
         </Button>
       </Grid>
 

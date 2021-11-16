@@ -34,6 +34,10 @@ const theme = createTheme({
     text: {
       primary: '#fff',
       secondary: '#dcf836'
+    },
+    action: {
+      disabledBackground: '#898484',
+      disabled: '#fff'
     }
   },
   typography: {

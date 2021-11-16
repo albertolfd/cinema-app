@@ -10,10 +10,10 @@ import { useQuery } from 'react-query';
 import { getImagePath, GetMoviesByCategory } from 'services/MovieService';
 import Movie from 'models/Movie';
 import Carousel from 'views/Carousel/Carousel';
-import CssSpinner from 'views/loadingIndicators/CssSpinner/CssSpinner';
 import { useLocation } from 'react-router-dom';
+import LazyImage from 'views/LazyImage/LazyImage';
 
-const MovieList: FC = () => {
+const CatalogueMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
 
   const [category, setCategory] = useState(
@@ -24,17 +24,7 @@ const MovieList: FC = () => {
     setCategory(location.state ? location.state.category : MovieCategory.POPULAR);
   }, [location.state]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-  // }, []);
-
-  const page = 1;
+  const [page, setPage] = useState(1);
   const movieQuery = useQuery<Page<Movie>, Error>(
     ['getMoviesByCategory', category, page],
     () => GetMoviesByCategory(category, page),
@@ -50,7 +40,7 @@ const MovieList: FC = () => {
         .slice(0, Math.min(5, movies.length));
 
       return movieSlice.map((movie) => (
-        <img
+        <LazyImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
           style={{ maxWidth: '100%' }}
@@ -58,56 +48,59 @@ const MovieList: FC = () => {
       ));
     }
 
-    return undefined;
+    return [];
   }, [movieQuery.data?.results]);
 
   return (
     <>
-      {loading ? (
-        <CssSpinner />
-      ) : (
-        <>
-          {
-            // #region Carousel
-          }
-          <Box height="50vh" width="100vw">
-            {carouselItems && <Carousel items={carouselItems} loading={movieQuery.isLoading} />}
-          </Box>
-          {
-            // #endregion
-          }
+      {
+        // #region Carousel
+      }
+      <Box height="50vh" width="100vw">
+        <Carousel items={carouselItems} loading={movieQuery.isLoading} />
+      </Box>
+      {
+        // #endregion
+      }
 
-          <Box padding="0 30px">
-            {
-              // #region Divider & Category title
-            }
-            <DividerView text={category} loading={movieQuery.isLoading} />
-            {
-              // #endregion
-            }
+      <Box padding="0 30px">
+        {
+          // #region Divider & Category title
+        }
+        <DividerView text={category} loading={movieQuery.isLoading} />
+        {
+          // #endregion
+        }
 
-            {
-              // #region Pagination
-            }
-            <Grid container paddingTop={2} alignItems="center" justifyContent="center">
-              {/* <Typography color="textPrimary" flexGrow={1} marginBottom={2} marginRight={2} variant="h6">
+        {
+          // #region Pagination
+        }
+        <Grid container paddingTop={2} alignItems="center" justifyContent="center">
+          {/* <Typography color="textPrimary" flexGrow={1} marginBottom={2} marginRight={2} variant="h6">
           Now Playing
         </Typography> */}
-              <Box marginBottom={2}>
-                <PaginationView loading={movieQuery.isLoading} />
-              </Box>
-            </Grid>
-            {
-              // #endregion
-            }
+          <Box marginBottom={2}>
+            <PaginationView
+              loading={movieQuery.isLoading}
+              page={page}
+              totalPages={movieQuery.data?.total_pages || 0}
+              isPreviousData={movieQuery.isPreviousData}
+              onChangePageHandler={(newPage) => setPage(newPage)}
+            />
+          </Box>
+        </Grid>
+        {
+          // #endregion
+        }
 
-            {
-              // #region Image List
-            }
-            {movieQuery.data?.results && (
-              <ImageListView
-                loading={movieQuery.isLoading}
-                items={movieQuery.data.results.map((movie) => {
+        {
+          // #region Image List
+        }
+        <ImageListView
+          loading={movieQuery.isLoading}
+          items={
+            movieQuery.data?.results
+              ? movieQuery.data.results.map((movie) => {
                   return {
                     key: movie.id,
                     image: getImagePath(movie.poster_path),
@@ -123,17 +116,16 @@ const MovieList: FC = () => {
                       </Box>
                     )
                   };
-                })}
-              />
-            )}
-            {
-              // #endregion
-            }
-          </Box>
-        </>
-      )}
+                })
+              : []
+          }
+        />
+        {
+          // #endregion
+        }
+      </Box>
     </>
   );
 };
 
-export default MovieList;
+export default CatalogueMovieList;

@@ -12,6 +12,7 @@ import Carousel from 'views/Carousel/Carousel';
 import LoadMoreButton from 'views/buttons/LoadMoreButton/LoadMoreButton';
 import RealFloatingButton from 'views/buttons/RealFloatingButton/RealFloatingButton';
 import { useLocation } from 'react-router-dom';
+import LazyImage from 'views/LazyImage/LazyImage';
 
 const TheaterMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
@@ -60,7 +61,7 @@ const TheaterMovieList: FC = () => {
         .slice(0, Math.min(5, movieItems.length));
 
       return movieSlice.map((movie) => (
-        <img
+        <LazyImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
           style={{ maxWidth: '100%' }}
@@ -68,7 +69,7 @@ const TheaterMovieList: FC = () => {
       ));
     }
 
-    return undefined;
+    return [];
   }, [movieQuery.data?.pages]);
 
   return (
@@ -77,12 +78,11 @@ const TheaterMovieList: FC = () => {
         // #region Carousel
       }
       <Box height="50vh" width="100vw">
-        {carouselItems && <Carousel items={carouselItems} loading={movieQuery.isLoading} />}
+        <Carousel items={carouselItems} loading={movieQuery.isLoading} />
       </Box>
       {
         // #endregion
       }
-
       <Box padding="0 30px">
         {
           // #region Divider & Category title
@@ -129,13 +129,13 @@ const TheaterMovieList: FC = () => {
           onClickHandler={() => movieQuery.fetchNextPage()}
           loadingMore={movieQuery.isFetchingNextPage}
           hasMoreToLoad={movieQuery.hasNextPage}
+          loading={movieQuery.isLoading}
         />
         {
           // #endregion
         }
       </Box>
-
-      <RealFloatingButton onClickHandler={() => window.scrollTo(0, 0)} />
+      {!movieQuery.isLoading && <RealFloatingButton onClickHandler={() => window.scrollTo(0, 0)} />}{' '}
     </>
   );
 };

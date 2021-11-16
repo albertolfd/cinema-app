@@ -7,5 +7,6 @@
     "TOP_RATED_PATH": "/top_rated",
     "UPCOMING_PATH": "/upcoming",
     "LANGUAGE": "language=en-US",
-    "IMAGE_BASE_PATH": "https://image.tmdb.org/t/p/original"
+    "IMAGE_BASE_PATH": "https://image.tmdb.org/t/p/original",
+    "REGION": "es"
 }

@@ -1,8 +1,8 @@
-import MovieList from 'modules/MovieList';
+import CatalogueMovieList from 'modules/CatalogueMovieList';
 import React, { FC } from 'react';
 
 const MovieCatalogue: FC = () => {
-  return <MovieList />;
+  return <CatalogueMovieList />;
 };
 
 export default MovieCatalogue;

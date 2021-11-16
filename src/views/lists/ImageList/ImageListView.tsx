@@ -7,6 +7,7 @@ import {
   Box
 } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useEffect, useMemo, useRef } from 'react';
+import LazyImage from 'views/LazyImage/LazyImage';
 import SkeletonView from 'views/loadingIndicators/SkeletonView/SkeletonView';
 import styles from './ImageListView.module.scss';
 
@@ -125,10 +126,9 @@ const ImageListView: FC<ImageListProps> = (props: ImageListProps) => {
         : items.map((item) => {
             return (
               <ImageListItem key={`Image-List-Item-${item.key}`} className={styles.listItem}>
-                <img
+                <LazyImage
                   src={item.image}
                   alt={`Item-Cover-${item.key}`}
-                  loading="lazy"
                   className={styles.listItemImage}
                 />
 

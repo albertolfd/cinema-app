@@ -10,7 +10,8 @@ import {
   TOP_RATED_PATH,
   UPCOMING_PATH,
   LANGUAGE,
-  IMAGE_BASE_PATH
+  IMAGE_BASE_PATH,
+  REGION
 } from './config/MovieService.json';
 
 export const GetMoviesByCategory = async (
@@ -45,7 +46,8 @@ export const GetMoviesByCategory = async (
   url.search = new URLSearchParams({
     api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
     language: LANGUAGE,
-    page: page.toString()
+    page: page.toString(),
+    region: REGION
   }).toString();
 
   const response = await fetch(url.toString(), {

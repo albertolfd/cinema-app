@@ -1,14 +1,13 @@
-.spinner {
-  margin: 100px auto 0;
-  width: 100px;
-  text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.spinnerRoot {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.spinner > div {
+.spinner {
   width: 18px;
   height: 18px;
   background-color: #ffffff;
@@ -18,12 +17,12 @@
   -webkit-animation: bounce 1.4s infinite ease-in-out both;
 }
 
-.spinner .bounce1 {
+.bounce1 {
   animation-delay: -0.32s;
   -webkit-animation-delay: -0.32s;
 }
 
-.spinner .bounce2 {
+.bounce2 {
   animation-delay: -0.16s;
   -webkit-animation-delay: -0.16s;
 }

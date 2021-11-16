@@ -3,10 +3,10 @@ import styles from './CssSpinner.module.scss';
 
 const CssSpinner: FC = () => {
   return (
-    <div className={styles.spinner}>
-      <div className={styles.bounce1} />
-      <div className={styles.bounce2} />
-      <div className={styles.bounce3} />
+    <div className={styles.spinnerRoot}>
+      <div className={`${styles.spinner} ${styles.bounce1}`} />
+      <div className={`${styles.spinner} ${styles.bounce2}`} />
+      <div className={styles.spinner} />
     </div>
   );
 };

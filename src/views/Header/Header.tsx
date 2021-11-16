@@ -2,7 +2,7 @@ import { AppBar, Box, Drawer, Grid, IconButton, useMediaQuery, useTheme } from '
 import React, { FC, useEffect, useState } from 'react';
 import AnimatedGradientBar from 'views/AnimatedGradientBar/AnimatedGradientBar';
 import MenuIcon from '@mui/icons-material/Menu';
-import IMAGES from 'assets/AssetCatalogue';
+import { SVG_ASSETS } from 'assets/AssetCatalogue';
 import HeaderNavigation from './HeaderNavigation';
 
 const GRADIENT_BAR_HEIGHT = 5;
@@ -35,7 +35,7 @@ const Header: FC = ({ children }) => {
 
             <Grid item container alignItems="center" padding="0px 2%" height={HEADER_HEIGHT}>
               <Grid item flexGrow={1}>
-                <img src={IMAGES.APP_LOGO} alt="cinema-app-logo" style={{ width: 160 }} />
+                <img src={SVG_ASSETS.APP_LOGO} alt="cinema-app-logo" style={{ width: 160 }} />
               </Grid>
 
               <Grid item>
@@ -54,14 +54,14 @@ const Header: FC = ({ children }) => {
                 open={isMediumSizeScreen && mobileMenuOpen}
                 anchor="right"
                 onClose={handleMenuOpen}
-                hideBackdrop
                 sx={{ top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT }}
                 PaperProps={{
                   sx: { top: GRADIENT_BAR_HEIGHT + HEADER_HEIGHT, boxShadow: 'none' }
                 }}
+                BackdropProps={{ sx: { backgroundColor: 'transparent' } }}
               >
                 <Box padding="25px 10px">
-                  <HeaderNavigation displayDirection="column" />
+                  <HeaderNavigation displayDirection="column" onNavigateHandler={handleMenuOpen} />
                 </Box>
               </Drawer>
             </Grid>
