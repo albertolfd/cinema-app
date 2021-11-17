@@ -9,10 +9,14 @@ import theme from 'themes/GlobalTheme';
 import MovieCatalogue from 'routes/MovieCatalogue';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Theater from 'routes/Theater';
+import SearchList from 'routes/SearchList';
+import { configureSearchQueryState } from 'hooks/useSearch';
 import reportWebVitals from './reportWebVitals';
 
 // Create React Query client
 const queryClient = new QueryClient();
+
+configureSearchQueryState();
 
 ReactDOM.render(
   <React.StrictMode>
@@ -24,6 +28,10 @@ ReactDOM.render(
               <Switch>
                 <Route path="/movieCatalogue">
                   <MovieCatalogue />
+                </Route>
+
+                <Route path="/search">
+                  <SearchList />
                 </Route>
 
                 <Route>
