@@ -4,12 +4,22 @@ import './SearchField.scss';
 
 interface SearchFieldProps {
   placeholder: string;
+  value: string;
+  onChangeHandler: (newValue: string) => void;
 }
 
 const SearchField: FC<SearchFieldProps> = (props: SearchFieldProps) => {
-  const { placeholder } = props;
+  const { placeholder, value, onChangeHandler } = props;
 
-  return <TextField variant="outlined" placeholder={placeholder} className="searchField" />;
+  return (
+    <TextField
+      value={value}
+      onChange={(event) => onChangeHandler(event?.target.value)}
+      variant="outlined"
+      placeholder={placeholder}
+      className="searchField"
+    />
+  );
 };
 
 export default SearchField;

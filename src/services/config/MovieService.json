@@ -1,6 +1,7 @@
 {
     "BASE_PATH": "https://api.themoviedb.org/3",
     "MOVIE_PATH": "/movie",
+    "SEARCH_PATH": "/search",
     "LATEST_PATH": "/latest",
     "NOW_PLAYING_PATH": "/now_playing",
     "POPULAR_PATH": "/popular",

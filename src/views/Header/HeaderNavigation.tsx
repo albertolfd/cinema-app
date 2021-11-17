@@ -8,7 +8,10 @@ import StarIcon from '@mui/icons-material/Star';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import { useHistory } from 'react-router-dom';
 import MovieCategory from 'models/MovieCategory';
+import useSearch, { CHANGE_QUERY_SEARCH } from 'hooks/useSearch';
 import styles from './HeaderNavigation.module.scss';
+
+const SEARCH_FIELD_PLACEHOLDER = 'Search for a movie';
 
 interface HeaderNavigationProps {
   displayDirection?: 'row' | 'column';
@@ -19,6 +22,8 @@ const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProp
   const { displayDirection, onNavigateHandler } = props;
 
   const history = useHistory();
+  const { searchQueryState, dispatch } = useSearch();
+  const { searchQuery } = searchQueryState;
 
   const rootFlexDirection = displayDirection ?? 'row';
 
@@ -32,6 +37,16 @@ const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProp
     }
 
     history.push(path, { category });
+  };
+
+  const onSearchHandler = (query: string) => {
+    if (history.location.pathname !== '/search' && query.length > 0) {
+      history.push('/search');
+    } else if (history.location.pathname === '/search' && query.length === 0) {
+      history.goBack();
+    }
+
+    dispatch(CHANGE_QUERY_SEARCH, query);
   };
 
   return (
@@ -84,7 +99,11 @@ const HeaderNavigation: FC<HeaderNavigationProps> = (props: HeaderNavigationProp
       </Grid>
 
       <Grid item>
-        <SearchField placeholder="Search for a movie" />
+        <SearchField
+          value={searchQuery}
+          onChangeHandler={(query) => onSearchHandler(query)}
+          placeholder={SEARCH_FIELD_PLACEHOLDER}
+        />
       </Grid>
     </Grid>
   );
