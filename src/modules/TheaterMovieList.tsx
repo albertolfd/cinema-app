@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import MovieCategory from 'models/MovieCategory';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import DividerView from 'views/Divider/DividerView';
@@ -12,7 +12,8 @@ import Carousel from 'views/Carousel/Carousel';
 import LoadMoreButton from 'views/buttons/LoadMoreButton/LoadMoreButton';
 import RealFloatingButton from 'views/buttons/RealFloatingButton/RealFloatingButton';
 import { useLocation } from 'react-router-dom';
-import LazyImage from 'views/LazyImage/LazyImage';
+import LazyImage from 'views/ImageViews/LazyImage/LazyImage';
+import ReadMoreButton from 'views/buttons/ReadMoreButton/ReadMoreButton';
 
 const TheaterMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
@@ -64,7 +65,7 @@ const TheaterMovieList: FC = () => {
         <LazyImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
-          style={{ maxWidth: '100%' }}
+          style={{ width: '100%', objectFit: 'cover' }}
         />
       ));
     }
@@ -110,11 +111,7 @@ const TheaterMovieList: FC = () => {
                   <Rating rating={movie.vote_average} movieId={movie.id} />
                 </Box>
               ),
-              children: (
-                <Box display="flex" alignItems="center">
-                  <Button variant="contained">Read more</Button>
-                </Box>
-              )
+              children: <ReadMoreButton itemId={movie.id} />
             };
           })}
         />

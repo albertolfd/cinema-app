@@ -15,6 +15,20 @@ import {
   REGION
 } from './config/MovieService.json';
 
+const fetchAndExtractResponse = async <T>(url: URL): Promise<T> => {
+  const response = await fetch(url.toString(), {
+    method: 'GET'
+  }).catch((error) => {
+    throw new Error(error);
+  });
+
+  const responseObject: T = await response.json().catch((error) => {
+    throw new Error(error);
+  });
+
+  return responseObject;
+};
+
 export const GetMoviesByCategory = async (
   category: MovieCategory,
   page: number
@@ -51,17 +65,7 @@ export const GetMoviesByCategory = async (
     region: REGION
   }).toString();
 
-  const response = await fetch(url.toString(), {
-    method: 'GET'
-  }).catch((error) => {
-    throw new Error(error);
-  });
-
-  const moviePage: Page<Movie> = await response.json().catch((error) => {
-    throw new Error(error);
-  });
-
-  return moviePage;
+  return fetchAndExtractResponse(url);
 };
 
 export const SearchMovies = async (query: string, page: number): Promise<Page<Movie>> => {
@@ -75,17 +79,18 @@ export const SearchMovies = async (query: string, page: number): Promise<Page<Mo
     region: REGION
   }).toString();
 
-  const response = await fetch(url.toString(), {
-    method: 'GET'
-  }).catch((error) => {
-    throw new Error(error);
-  });
+  return fetchAndExtractResponse(url);
+};
 
-  const moviePage: Page<Movie> = await response.json().catch((error) => {
-    throw new Error(error);
-  });
+export const GetMovie = async (movieId: number): Promise<Movie> => {
+  const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}`);
 
-  return moviePage;
+  url.search = new URLSearchParams({
+    api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
+    language: LANGUAGE
+  }).toString();
+
+  return fetchAndExtractResponse(url);
 };
 
 export const getImagePath = (imagePath: string): string => {

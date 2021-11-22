@@ -1,17 +1,23 @@
-import { Box, Grid, Button } from '@mui/material';
-import useSearch from 'hooks/useSearch';
+import { Box, Grid, useMediaQuery, useTheme } from '@mui/material';
+import useSearch, { CHANGE_QUERY_SEARCH } from 'hooks/useSearch';
 import Movie from 'models/Movie';
 import Page from 'models/Page';
 import React, { FC, useState } from 'react';
 import { useQuery } from 'react-query';
 import { SearchMovies, getImagePath } from 'services/MovieService';
+import ReadMoreButton from 'views/buttons/ReadMoreButton/ReadMoreButton';
 import DividerView from 'views/Divider/DividerView';
+import SearchField, { SEARCH_FIELD_PLACEHOLDER } from 'views/fields/SearchField/SearchField';
 import ImageListView from 'views/lists/ImageList/ImageListView';
 import PaginationView from 'views/Pagination/PaginationViewn';
 import Rating from 'views/Rating/Rating';
 
-const SearchListModule: FC = () => {
-  const { searchQuery } = useSearch().searchQueryState;
+const SearchList: FC = () => {
+  const { searchQueryState, dispatch } = useSearch();
+  const { searchQuery } = searchQueryState;
+
+  const theme = useTheme();
+  const isMediumSizeScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [page, setPage] = useState(1);
   const movieQuery = useQuery<Page<Movie>, Error>(
@@ -22,6 +28,16 @@ const SearchListModule: FC = () => {
 
   return (
     <Box padding="30px 30px">
+      {isMediumSizeScreen && (
+        <Box display="flex" justifyContent="center">
+          <SearchField
+            value={searchQuery}
+            onChangeHandler={(query) => dispatch(CHANGE_QUERY_SEARCH, query)}
+            placeholder={SEARCH_FIELD_PLACEHOLDER}
+          />
+        </Box>
+      )}
+
       {
         // #region Divider & Category title
       }
@@ -34,9 +50,6 @@ const SearchListModule: FC = () => {
         // #region Pagination
       }
       <Grid container paddingTop={2} alignItems="center" justifyContent="center">
-        {/* <Typography color="textPrimary" flexGrow={1} marginBottom={2} marginRight={2} variant="h6">
-          Now Playing
-        </Typography> */}
         <Box marginBottom={2}>
           <PaginationView
             loading={movieQuery.isLoading}
@@ -68,11 +81,7 @@ const SearchListModule: FC = () => {
                       <Rating rating={movie.vote_average} movieId={movie.id} />
                     </Box>
                   ),
-                  children: (
-                    <Box display="flex" alignItems="center">
-                      <Button variant="contained">Read more</Button>
-                    </Box>
-                  )
+                  children: <ReadMoreButton itemId={movie.id} />
                 };
               })
             : []
@@ -85,4 +94,4 @@ const SearchListModule: FC = () => {
   );
 };
 
-export default SearchListModule;
+export default SearchList;

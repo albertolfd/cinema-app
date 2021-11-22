@@ -33,7 +33,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#fff',
-      secondary: '#dcf836'
+      secondary: '#abb7c4'
     },
     action: {
       disabledBackground: '#898484',

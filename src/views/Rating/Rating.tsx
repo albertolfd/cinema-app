@@ -44,7 +44,7 @@ const Rating: FC<RatingProps> = (props: RatingProps) => {
         <div>{hollowStars}</div>
 
         <div
-          className={styles.hollowStarsContainer}
+          className={styles.filledStarsContainer}
           style={{ width: `${Math.floor((rating / 10) * 100)}%` }}
         >
           {filledStars}

@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import MovieCategory from 'models/MovieCategory';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import DividerView from 'views/Divider/DividerView';
@@ -11,7 +11,8 @@ import { getImagePath, GetMoviesByCategory } from 'services/MovieService';
 import Movie from 'models/Movie';
 import Carousel from 'views/Carousel/Carousel';
 import { useLocation } from 'react-router-dom';
-import LazyImage from 'views/LazyImage/LazyImage';
+import LazyImage from 'views/ImageViews/LazyImage/LazyImage';
+import ReadMoreButton from 'views/buttons/ReadMoreButton/ReadMoreButton';
 
 const CatalogueMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
@@ -43,7 +44,7 @@ const CatalogueMovieList: FC = () => {
         <LazyImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
-          style={{ maxWidth: '100%' }}
+          style={{ width: '100%', objectFit: 'cover' }}
         />
       ));
     }
@@ -76,9 +77,6 @@ const CatalogueMovieList: FC = () => {
           // #region Pagination
         }
         <Grid container paddingTop={2} alignItems="center" justifyContent="center">
-          {/* <Typography color="textPrimary" flexGrow={1} marginBottom={2} marginRight={2} variant="h6">
-          Now Playing
-        </Typography> */}
           <Box marginBottom={2}>
             <PaginationView
               loading={movieQuery.isLoading}
@@ -110,11 +108,7 @@ const CatalogueMovieList: FC = () => {
                         <Rating rating={movie.vote_average} movieId={movie.id} />
                       </Box>
                     ),
-                    children: (
-                      <Box display="flex" alignItems="center">
-                        <Button variant="contained">Read more</Button>
-                      </Box>
-                    )
+                    children: <ReadMoreButton itemId={movie.id} />
                   };
                 })
               : []
