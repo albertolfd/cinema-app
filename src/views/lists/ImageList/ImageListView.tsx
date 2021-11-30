@@ -7,7 +7,7 @@ import {
   Box
 } from '@mui/material';
 import React, { FC, ReactNode, useCallback, useEffect, useMemo, useRef } from 'react';
-import LazyImage from 'views/LazyImage/LazyImage';
+import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
 import SkeletonView from 'views/loadingIndicators/SkeletonView/SkeletonView';
 import styles from './ImageListView.module.scss';
 
@@ -120,17 +120,13 @@ const ImageListView: FC<ImageListProps> = (props: ImageListProps) => {
   }, [reachListBottomHandler, handleScroll]);
 
   return (
-    <ImageList gap={30} rowHeight={560} className={styles.imageList} cols={cols} ref={listRef}>
+    <ImageList gap={30} className={styles.imageList} cols={cols} ref={listRef}>
       {loading
         ? skeletonList
         : items.map((item) => {
             return (
               <ImageListItem key={`Image-List-Item-${item.key}`} className={styles.listItem}>
-                <LazyImage
-                  src={item.image}
-                  alt={`Item-Cover-${item.key}`}
-                  className={styles.listItemImage}
-                />
+                <ImagePoster src={item.image} alt={`Item-Cover-${item.key}`} />
 
                 <Box
                   position="absolute"

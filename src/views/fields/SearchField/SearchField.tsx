@@ -2,6 +2,8 @@ import { TextField } from '@mui/material';
 import React, { FC } from 'react';
 import './SearchField.scss';
 
+export const SEARCH_FIELD_PLACEHOLDER = 'Search for a movie';
+
 interface SearchFieldProps {
   placeholder: string;
   value: string;

@@ -15,18 +15,6 @@
   display: flex;
 }
 
-.listItemImage {
-  object-fit: cover;
-  width: 100%;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-
-  max-height: 100%;
-  border-radius: 7px;
-}
-
 .listItemBar {
   text-transform: uppercase;
   font-weight: 700;
