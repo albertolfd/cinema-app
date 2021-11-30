@@ -1,5 +1,19 @@
+.root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.imageContainer {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .spinnerContainer {
   position: absolute;
+  top: 0;
   height: 100%;
   width: 100%;
   background: #051523;
@@ -7,6 +21,7 @@
 
 .errorImageContainer {
   position: absolute;
+  top: 0;
   height: 100%;
   width: 100%;
   background: white;
@@ -21,6 +36,6 @@
 }
 
 .errorImage {
-  object-fit: cover;
+  object-fit: contain;
   width: 100%;
 }

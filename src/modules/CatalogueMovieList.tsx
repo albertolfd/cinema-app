@@ -11,8 +11,8 @@ import { getImagePath, GetMoviesByCategory } from 'services/MovieService';
 import Movie from 'models/Movie';
 import Carousel from 'views/Carousel/Carousel';
 import { useLocation } from 'react-router-dom';
-import LazyImage from 'views/ImageViews/LazyImage/LazyImage';
 import ReadMoreButton from 'views/buttons/ReadMoreButton/ReadMoreButton';
+import CarouselImage from 'views/ImageViews/CarouselImage/CarouselImage';
 
 const CatalogueMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
@@ -41,10 +41,9 @@ const CatalogueMovieList: FC = () => {
         .slice(0, Math.min(5, movies.length));
 
       return movieSlice.map((movie) => (
-        <LazyImage
+        <CarouselImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
-          style={{ width: '100%', objectFit: 'cover' }}
         />
       ));
     }

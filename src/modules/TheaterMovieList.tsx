@@ -12,8 +12,8 @@ import Carousel from 'views/Carousel/Carousel';
 import LoadMoreButton from 'views/buttons/LoadMoreButton/LoadMoreButton';
 import RealFloatingButton from 'views/buttons/RealFloatingButton/RealFloatingButton';
 import { useLocation } from 'react-router-dom';
-import LazyImage from 'views/ImageViews/LazyImage/LazyImage';
 import ReadMoreButton from 'views/buttons/ReadMoreButton/ReadMoreButton';
+import CarouselImage from 'views/ImageViews/CarouselImage/CarouselImage';
 
 const TheaterMovieList: FC = () => {
   const location = useLocation<{ category: MovieCategory }>();
@@ -62,10 +62,9 @@ const TheaterMovieList: FC = () => {
         .slice(0, Math.min(5, movieItems.length));
 
       return movieSlice.map((movie) => (
-        <LazyImage
+        <CarouselImage
           src={getImagePath(movie.backdrop_path)}
           alt={`Carousel-Item-Id-${movie.id}`}
-          style={{ width: '100%', objectFit: 'cover' }}
         />
       ));
     }

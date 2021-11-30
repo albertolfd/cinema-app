@@ -14,7 +14,7 @@ const ImagePoster: FC<ImagePosterProps> = (props: ImagePosterProps) => {
   const isMobileSizeScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const posterHeight = useMemo(() => {
     if (isMobileSizeScreen) {
-      return 430;
+      return 310;
     }
     return 560;
   }, [isMobileSizeScreen]);
@@ -24,7 +24,7 @@ const ImagePoster: FC<ImagePosterProps> = (props: ImagePosterProps) => {
       <LazyImage
         src={src}
         alt={alt}
-        style={{ height: posterHeight }}
+        imageContainerStyle={{ height: posterHeight, borderRadius: '7px' }}
         className={styles.imagePoster}
       />
     </Box>

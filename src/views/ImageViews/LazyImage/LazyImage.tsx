@@ -6,36 +6,37 @@ import styles from './LazyImage.module.scss';
 interface LazyImageProps {
   src: string;
   alt: string;
+  imageContainerStyle?: React.CSSProperties;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 const LazyImage: FC<LazyImageProps> = (props: LazyImageProps) => {
-  const { src, alt, className, style } = props;
+  const { src, alt, imageContainerStyle, className } = props;
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
 
   return (
-    <>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className={className}
-        style={style}
-        onLoad={() => setIsImageLoaded(true)}
-        onError={() => setIsError(true)}
-      />
+    <div className={styles.root}>
+      <div className={styles.imageContainer} style={imageContainerStyle}>
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          className={className}
+          onLoad={() => setIsImageLoaded(true)}
+          onError={() => setIsError(true)}
+        />
+      </div>
 
       {!isImageLoaded && (
-        <div className={`${styles.spinnerContainer} ${className}`}>
+        <div className={styles.spinnerContainer} style={imageContainerStyle}>
           <CssSpinner />
         </div>
       )}
 
       {isError && (
-        <div className={`${styles.errorImageContainer} ${className}`}>
+        <div className={styles.errorImageContainer} style={imageContainerStyle}>
           <div className={styles.errorImageRelativeContainer}>
             <img
               src={IMAGE_ASSETS.NO_IMAGE_PLACEHOLDER}
@@ -45,7 +46,7 @@ const LazyImage: FC<LazyImageProps> = (props: LazyImageProps) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

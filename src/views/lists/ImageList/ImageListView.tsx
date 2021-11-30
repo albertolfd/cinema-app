@@ -65,13 +65,6 @@ const ImageListView: FC<ImageListProps> = (props: ImageListProps) => {
     isLargeSizeScreen
   ]);
 
-  const rowHeight = useMemo(() => {
-    if (isMobileSizeScreen) {
-      return 430;
-    }
-    return 560;
-  }, [isMobileSizeScreen]);
-
   // #region Loading Skeleton
   const skeletonList = useMemo(() => {
     const skeletons = [];
@@ -127,13 +120,7 @@ const ImageListView: FC<ImageListProps> = (props: ImageListProps) => {
   }, [reachListBottomHandler, handleScroll]);
 
   return (
-    <ImageList
-      gap={30}
-      rowHeight={rowHeight}
-      className={styles.imageList}
-      cols={cols}
-      ref={listRef}
-    >
+    <ImageList gap={30} className={styles.imageList} cols={cols} ref={listRef}>
       {loading
         ? skeletonList
         : items.map((item) => {
