@@ -1,13 +1,13 @@
 import { Box, Grid, Typography } from '@mui/material';
 import Movie from 'models/Movie';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { getImagePath, GetMovie } from 'services/MovieService';
 import CarouselImage from 'views/ImageViews/CarouselImage/CarouselImage';
 import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
-import Rating from 'views/Rating/Rating';
-import styles from './ItemDetail.module.scss';
+import MovieBasicInfo from 'views/MovieBasicInfo/MovieBasicInfo';
+import TabsView, { TabViewProps } from 'views/Tabs/TabsView';
 
 interface ItemDetailProps {
   movieId: string;
@@ -18,6 +18,43 @@ const ItemDetail: FC = () => {
 
   const movieQuery = useQuery<Movie, Error>(['getMovie', movieId], () => GetMovie(Number(movieId)));
   const movie = movieQuery.data;
+
+  const itemDetailTabs = useMemo((): Array<TabViewProps> => {
+    return [
+      {
+        label: 'Overview',
+        tabContent: (
+          <Typography color="textPrimary" variant="h1">
+            Overview
+          </Typography>
+        )
+      },
+      {
+        label: 'Crew',
+        tabContent: (
+          <Typography color="textPrimary" variant="h1">
+            Crew
+          </Typography>
+        )
+      },
+      {
+        label: 'Media',
+        tabContent: (
+          <Typography color="textPrimary" variant="h1">
+            Media
+          </Typography>
+        )
+      },
+      {
+        label: 'Reviews',
+        tabContent: (
+          <Typography color="textPrimary" variant="h1">
+            Reviews
+          </Typography>
+        )
+      }
+    ];
+  }, []);
 
   return (
     <>
@@ -31,6 +68,7 @@ const ItemDetail: FC = () => {
                 alt={`Movie-Detail-Background-${movie?.id}`}
               />
 
+              {/** Dark layout */}
               <Box
                 position="absolute"
                 top={0}
@@ -51,55 +89,24 @@ const ItemDetail: FC = () => {
               />
             </Grid>
 
-            <Grid item>
-              {/** Title & release date */}
-              <Grid container spacing={2} display="flex" alignItems="end">
+            <Box>
+              <Grid item container direction="column">
                 <Grid item>
-                  <Typography variant="h1" color="secondary">
-                    {movie?.title}
-                  </Typography>
-                </Grid>
-
-                <Grid item>
-                  <Typography variant="h5" color="textSecondary">
-                    {movie?.release_date}
-                  </Typography>
-                </Grid>
-              </Grid>
-
-              {/** Genres */}
-              <Grid container spacing={3} marginTop="2%">
-                {movie?.genres.map((genre) => (
-                  <Grid item key={`Genre-${genre.id}`}>
-                    <Typography
-                      key={`Movie-${movie?.id}-Genre-${genre.id}`}
-                      color="primary"
-                      fontWeight="bold"
-                      sx={{ textTransform: 'uppercase' }}
-                    >
-                      {genre.name}
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-
-              <Grid container spacing={2} marginTop="2%" display="flex" alignItems="center">
-                <Grid item>
-                  <Rating
-                    rating={movie?.vote_average || 0}
-                    movieId={movie?.id || 0}
-                    textClassName={styles.movieRating}
-                    starsSize={35}
+                  <MovieBasicInfo
+                    id={movie.id}
+                    title={movie.title}
+                    releaseDate={movie.release_date}
+                    genres={movie.genres}
+                    voteAverage={movie.vote_average}
+                    voteCount={movie.vote_count}
                   />
                 </Grid>
 
-                <Grid item>
-                  <Typography variant="h6" color="textSecondary">
-                    {movie?.vote_count} reviews
-                  </Typography>
+                <Grid item paddingTop={12}>
+                  <TabsView tabs={itemDetailTabs} />
                 </Grid>
               </Grid>
-            </Grid>
+            </Box>
           </Grid>
         </Box>
       )}
