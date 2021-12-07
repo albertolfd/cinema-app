@@ -1,9 +1,11 @@
+import Credits from 'models/Credits';
 import Movie from 'models/Movie';
 import MovieCategory from 'models/MovieCategory';
 import Page from 'models/Page';
 import {
   BASE_PATH,
   MOVIE_PATH,
+  CREDITS_PATH,
   SEARCH_PATH,
   LATEST_PATH,
   NOW_PLAYING_PATH,
@@ -84,6 +86,17 @@ export const SearchMovies = async (query: string, page: number): Promise<Page<Mo
 
 export const GetMovie = async (movieId: number): Promise<Movie> => {
   const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}`);
+
+  url.search = new URLSearchParams({
+    api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
+    language: LANGUAGE
+  }).toString();
+
+  return fetchAndExtractResponse(url);
+};
+
+export const GetMovieCredits = async (movieId: number): Promise<Credits> => {
+  const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}${CREDITS_PATH}`);
 
   url.search = new URLSearchParams({
     api_key: process.env.REACT_APP_MOVIE_API_KEY || '',

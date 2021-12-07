@@ -40,7 +40,7 @@ const LazyImage: FC<LazyImageProps> = (props: LazyImageProps) => {
           <div className={styles.errorImageRelativeContainer}>
             <img
               src={IMAGE_ASSETS.NO_IMAGE_PLACEHOLDER}
-              className={styles.errorImage}
+              className={`${styles.errorImage} ${className} `}
               alt={`Error-Placeholder-${alt}`}
             />
           </div>

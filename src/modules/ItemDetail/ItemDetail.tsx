@@ -1,13 +1,15 @@
 import { Box, Grid, Typography } from '@mui/material';
+import Credits from 'models/Credits';
 import Movie from 'models/Movie';
 import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { getImagePath, GetMovie } from 'services/MovieService';
+import { getImagePath, GetMovie, GetMovieCredits } from 'services/MovieService';
 import CarouselImage from 'views/ImageViews/CarouselImage/CarouselImage';
 import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
-import MovieBasicInfo from 'views/MovieBasicInfo/MovieBasicInfo';
+import MovieBasicInfo from 'views/MovieViews/MovieBasicInfo/MovieBasicInfo';
 import TabsView, { TabViewProps } from 'views/Tabs/TabsView';
+import ItemOverview from './ItemOverview';
 
 interface ItemDetailProps {
   movieId: string;
@@ -17,17 +19,14 @@ const ItemDetail: FC = () => {
   const { movieId } = useParams<ItemDetailProps>();
 
   const movieQuery = useQuery<Movie, Error>(['getMovie', movieId], () => GetMovie(Number(movieId)));
+  useQuery<Credits, Error>(['getMovieCredits', movieId], () => GetMovieCredits(Number(movieId)));
   const movie = movieQuery.data;
 
   const itemDetailTabs = useMemo((): Array<TabViewProps> => {
     return [
       {
         label: 'Overview',
-        tabContent: (
-          <Typography color="textPrimary" variant="h1">
-            Overview
-          </Typography>
-        )
+        tabContent: <ItemOverview movieId={movieId} />
       },
       {
         label: 'Crew',
@@ -54,7 +53,7 @@ const ItemDetail: FC = () => {
         )
       }
     ];
-  }, []);
+  }, [movieId]);
 
   return (
     <>
@@ -89,24 +88,22 @@ const ItemDetail: FC = () => {
               />
             </Grid>
 
-            <Box>
-              <Grid item container direction="column">
-                <Grid item>
-                  <MovieBasicInfo
-                    id={movie.id}
-                    title={movie.title}
-                    releaseDate={movie.release_date}
-                    genres={movie.genres}
-                    voteAverage={movie.vote_average}
-                    voteCount={movie.vote_count}
-                  />
-                </Grid>
-
-                <Grid item paddingTop={12}>
-                  <TabsView tabs={itemDetailTabs} />
-                </Grid>
+            <Grid item container direction="column" xs>
+              <Grid item>
+                <MovieBasicInfo
+                  id={movie.id}
+                  title={movie.title}
+                  releaseDate={movie.release_date}
+                  genres={movie.genres}
+                  voteAverage={movie.vote_average}
+                  voteCount={movie.vote_count}
+                />
               </Grid>
-            </Box>
+
+              <Grid item paddingTop={12}>
+                <TabsView tabs={itemDetailTabs} />
+              </Grid>
+            </Grid>
           </Grid>
         </Box>
       )}

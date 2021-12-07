@@ -36,6 +36,6 @@
 }
 
 .errorImage {
-  object-fit: contain;
-  width: 100%;
+  object-fit: contain !important;
+  width: 100% !important;
 }
