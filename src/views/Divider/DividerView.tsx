@@ -11,6 +11,7 @@ interface DividerViewProps {
 const StyledDivider = styled(Divider)`
   color: #ffffffab;
   margin-top: 15px;
+  border-color: #ffffff4f;
 
   ::after,
   ::before {
@@ -26,9 +27,7 @@ const DividerView: FC<DividerViewProps> = (props: DividerViewProps) => {
       {loading ? (
         <SkeletonView variant="text" height="25px" />
       ) : (
-        <StyledDivider>
-          <Typography variant="subtitle1">{text}</Typography>
-        </StyledDivider>
+        <StyledDivider>{text && <Typography variant="subtitle1">{text}</Typography>}</StyledDivider>
       )}
     </>
   );

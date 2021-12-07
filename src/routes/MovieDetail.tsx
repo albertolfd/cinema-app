@@ -1,4 +1,4 @@
-import ItemDetail from 'modules/ItemDetail';
+import ItemDetail from 'modules/ItemDetail/ItemDetail';
 import React, { FC } from 'react';
 
 const MovieDetail: FC = () => {

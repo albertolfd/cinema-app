@@ -22,7 +22,12 @@ const TabsView: FC<TabsViewProps> = (props: TabsViewProps) => {
   return (
     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
       <Grid container direction="column">
-        <Grid item display="flex" justifyContent={isMobileSizeScreen ? 'start' : 'center'}>
+        <Grid
+          item
+          marginBottom={7}
+          display="flex"
+          justifyContent={isMobileSizeScreen ? 'start' : 'center'}
+        >
           <Tabs
             value={activeTab}
             onChange={(event, newValue) => setActiveTab(newValue)}
@@ -36,7 +41,7 @@ const TabsView: FC<TabsViewProps> = (props: TabsViewProps) => {
           </Tabs>
         </Grid>
 
-        <Grid>{tabs[activeTab].tabContent}</Grid>
+        <Grid item>{tabs[activeTab].tabContent}</Grid>
       </Grid>
     </Box>
   );
