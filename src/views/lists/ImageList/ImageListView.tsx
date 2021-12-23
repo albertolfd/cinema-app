@@ -12,11 +12,11 @@ import SkeletonView from 'views/loadingIndicators/SkeletonView/SkeletonView';
 import styles from './ImageListView.module.scss';
 
 export interface ImageItem {
-  key: number;
+  key: number | string;
   image: string;
-  title: ReactNode;
-  subtitle: ReactNode;
-  children: ReactNode;
+  title?: ReactNode;
+  subtitle?: ReactNode;
+  children?: ReactNode;
 }
 
 interface ImageListProps {
@@ -140,11 +140,13 @@ const ImageListView: FC<ImageListProps> = (props: ImageListProps) => {
                   {item.children}
                 </Box>
 
-                <ImageListItemBar
-                  title={item.title}
-                  className={styles.listItemBar}
-                  subtitle={item.subtitle}
-                />
+                {item.title && (
+                  <ImageListItemBar
+                    title={item.title}
+                    className={styles.listItemBar}
+                    subtitle={item.subtitle}
+                  />
+                )}
               </ImageListItem>
             );
           })}

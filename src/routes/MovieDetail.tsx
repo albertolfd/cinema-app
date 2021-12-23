@@ -1,8 +1,8 @@
-import ItemDetail from 'modules/ItemDetail/ItemDetail';
+import ItemDetailMain from 'modules/ItemDetail/ItemDetailMain';
 import React, { FC } from 'react';
 
 const MovieDetail: FC = () => {
-  return <ItemDetail />;
+  return <ItemDetailMain />;
 };
 
 export default MovieDetail;

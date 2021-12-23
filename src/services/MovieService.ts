@@ -1,11 +1,15 @@
 import Credits from 'models/Credits';
 import Movie from 'models/Movie';
 import MovieCategory from 'models/MovieCategory';
+import MovieImages from 'models/MovieImages';
+import MovieVideos from 'models/MovieVideos';
 import Page from 'models/Page';
 import {
   BASE_PATH,
   MOVIE_PATH,
   CREDITS_PATH,
+  MOVIE_IMAGES_PATH,
+  MOVIE_VIDEOS_PATH,
   SEARCH_PATH,
   LATEST_PATH,
   NOW_PLAYING_PATH,
@@ -97,6 +101,29 @@ export const GetMovie = async (movieId: number): Promise<Movie> => {
 
 export const GetMovieCredits = async (movieId: number): Promise<Credits> => {
   const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}${CREDITS_PATH}`);
+
+  url.search = new URLSearchParams({
+    api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
+    language: LANGUAGE
+  }).toString();
+
+  return fetchAndExtractResponse(url);
+};
+
+export const GetMovieImages = async (movieId: number): Promise<MovieImages> => {
+  const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}${MOVIE_IMAGES_PATH}`);
+
+  url.search = new URLSearchParams({
+    api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
+    language: LANGUAGE,
+    include_image_language: 'en'
+  }).toString();
+
+  return fetchAndExtractResponse(url);
+};
+
+export const GetMovieVideos = async (movieId: number): Promise<MovieVideos> => {
+  const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}${MOVIE_VIDEOS_PATH}`);
 
   url.search = new URLSearchParams({
     api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
