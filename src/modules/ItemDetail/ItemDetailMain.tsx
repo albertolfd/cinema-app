@@ -9,14 +9,16 @@ import CarouselImage from 'views/ImageViews/CarouselImage/CarouselImage';
 import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
 import MovieBasicInfo from 'views/MovieViews/MovieBasicInfo/MovieBasicInfo';
 import TabsView, { TabViewProps } from 'views/Tabs/TabsView';
+import ItemCrew from './ItemCrew';
+import ItemMedia from './ItemMedia';
 import ItemOverview from './ItemOverview';
 
-interface ItemDetailProps {
+interface ItemDetailMainProps {
   movieId: string;
 }
 
-const ItemDetail: FC = () => {
-  const { movieId } = useParams<ItemDetailProps>();
+const ItemDetailMain: FC = () => {
+  const { movieId } = useParams<ItemDetailMainProps>();
 
   const movieQuery = useQuery<Movie, Error>(['getMovie', movieId], () => GetMovie(Number(movieId)));
   useQuery<Credits, Error>(['getMovieCredits', movieId], () => GetMovieCredits(Number(movieId)));
@@ -30,19 +32,11 @@ const ItemDetail: FC = () => {
       },
       {
         label: 'Crew',
-        tabContent: (
-          <Typography color="textPrimary" variant="h1">
-            Crew
-          </Typography>
-        )
+        tabContent: <ItemCrew movieId={movieId} />
       },
       {
         label: 'Media',
-        tabContent: (
-          <Typography color="textPrimary" variant="h1">
-            Media
-          </Typography>
-        )
+        tabContent: <ItemMedia movieId={movieId} />
       },
       {
         label: 'Reviews',
@@ -111,4 +105,4 @@ const ItemDetail: FC = () => {
   );
 };
 
-export default ItemDetail;
+export default ItemDetailMain;
