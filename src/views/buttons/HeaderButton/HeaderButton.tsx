@@ -8,6 +8,8 @@ interface HeaderButtonProps {
   label: string;
   // eslint-disable-next-line @typescript-eslint/ban-types
   Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & { muiName: string };
+  onClickHandler: () => void;
+  className?: string;
 }
 
 const StyledHeaderButton = styled(Button)`
@@ -17,9 +19,13 @@ const StyledHeaderButton = styled(Button)`
 `;
 
 const HeaderButton: FC<HeaderButtonProps> = (props: HeaderButtonProps) => {
-  const { label, Icon } = props;
+  const { label, Icon, onClickHandler, className } = props;
 
-  return <StyledHeaderButton startIcon={<Icon />}>{label}</StyledHeaderButton>;
+  return (
+    <StyledHeaderButton startIcon={<Icon />} onClick={onClickHandler} className={className}>
+      {label}
+    </StyledHeaderButton>
+  );
 };
 
 export default HeaderButton;

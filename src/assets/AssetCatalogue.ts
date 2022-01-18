@@ -1,7 +1,10 @@
 import AppLogoSvg from './img/cinema-logo.svg';
+import NoImagePlaceHolder from './img/no_image.png';
 
-const IMAGES = {
+export const SVG_ASSETS = {
   APP_LOGO: AppLogoSvg
 };
 
-export default IMAGES;
+export const IMAGE_ASSETS = {
+  NO_IMAGE_PLACEHOLDER: NoImagePlaceHolder
+};

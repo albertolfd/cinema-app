@@ -3,26 +3,37 @@ import { createTheme } from '@mui/material/styles';
 declare module '@mui/material/styles' {
   interface Theme {
     status: {
-      danger: string;
+      highlight: string;
     };
   }
   interface ThemeOptions {
     status?: {
-      danger?: string;
+      highlight?: string;
     };
   }
 }
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
-    danger: true;
     header: true;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    highlight: true;
+  }
+}
+
+declare module '@mui/material/Link' {
+  interface TypographyPropsVariantOverrides {
+    highlight: true;
   }
 }
 
 const theme = createTheme({
   status: {
-    danger: '#FFA51F'
+    highlight: '#3498db'
   },
   palette: {
     primary: {
@@ -33,7 +44,11 @@ const theme = createTheme({
     },
     text: {
       primary: '#fff',
-      secondary: '#dcf836'
+      secondary: '#abb7c4'
+    },
+    action: {
+      disabledBackground: '#898484',
+      disabled: '#fff'
     }
   },
   typography: {
@@ -92,15 +107,36 @@ const GlobalTheme = createTheme(theme, {
             textTransform: 'none',
             fontWeight: 'normal'
           }
-        },
+        }
+      ]
+    },
+    MuiTypography: {
+      variants: [
         {
-          props: { variant: 'danger' },
+          props: { variant: 'highlight' },
           style: {
-            color: theme.status.danger
+            color: theme.status.highlight
           }
         },
         {
-          props: { variant: 'danger', size: 'large' },
+          props: { variant: 'highlight', fontSize: 'large' },
+          style: {
+            fontSize: 26
+          }
+        }
+      ]
+    },
+    MuiLink: {
+      variants: [
+        {
+          props: { variant: 'highlight' },
+          style: {
+            color: theme.status.highlight,
+            textDecorationColor: '#3498db8f'
+          }
+        },
+        {
+          props: { variant: 'highlight', fontSize: 'large' },
           style: {
             fontSize: 26
           }
