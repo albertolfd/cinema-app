@@ -131,7 +131,7 @@ const TheaterMovieList: FC = () => {
           // #endregion
         }
       </Box>
-      {!movieQuery.isLoading && <RealFloatingButton onClickHandler={() => window.scrollTo(0, 0)} />}{' '}
+      {!movieQuery.isLoading && <RealFloatingButton onClickHandler={() => window.scrollTo(0, 0)} />}
     </>
   );
 };

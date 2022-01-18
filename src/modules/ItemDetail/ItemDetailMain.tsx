@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import Credits from 'models/Credits';
 import Movie from 'models/Movie';
 import React, { FC, useMemo } from 'react';
@@ -12,6 +12,7 @@ import TabsView, { TabViewProps } from 'views/Tabs/TabsView';
 import ItemCrew from './ItemCrew';
 import ItemMedia from './ItemMedia';
 import ItemOverview from './ItemOverview';
+import ItemReview from './ItemReview';
 
 interface ItemDetailMainProps {
   movieId: string;
@@ -40,11 +41,7 @@ const ItemDetailMain: FC = () => {
       },
       {
         label: 'Reviews',
-        tabContent: (
-          <Typography color="textPrimary" variant="h1">
-            Reviews
-          </Typography>
-        )
+        tabContent: <ItemReview movieId={movieId} />
       }
     ];
   }, [movieId]);
