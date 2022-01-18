@@ -34,14 +34,14 @@ const ItemMedia: FC<ItemMediaProps> = (props: ItemMediaProps) => {
       <Grid item container spacing={2}>
         {videosQuery.data?.results.map((video) => {
           return (
-            <Grid item container xs spacing={1} direction="column">
+            <Grid item container xs={4} spacing={1} direction="column">
               <Grid item>
                 <iframe
                   title={video.name}
                   src={`https://www.youtube.com/embed/${video.key}`}
                   frameBorder="0"
                   allowFullScreen
-                  style={{ borderRadius: '5px' }}
+                  style={{ borderRadius: '5px', width: '100%' }}
                 />
               </Grid>
 

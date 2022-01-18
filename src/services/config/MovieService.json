@@ -4,6 +4,7 @@
     "CREDITS_PATH": "/credits",
     "MOVIE_IMAGES_PATH": "/images",
     "MOVIE_VIDEOS_PATH": "/videos",
+    "MOVIE_REVIEWS_PATH": "/reviews",
     "SEARCH_PATH": "/search",
     "LATEST_PATH": "/latest",
     "NOW_PLAYING_PATH": "/now_playing",

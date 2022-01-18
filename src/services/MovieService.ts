@@ -4,12 +4,14 @@ import MovieCategory from 'models/MovieCategory';
 import MovieImages from 'models/MovieImages';
 import MovieVideos from 'models/MovieVideos';
 import Page from 'models/Page';
+import Review from 'models/Review';
 import {
   BASE_PATH,
   MOVIE_PATH,
   CREDITS_PATH,
   MOVIE_IMAGES_PATH,
   MOVIE_VIDEOS_PATH,
+  MOVIE_REVIEWS_PATH,
   SEARCH_PATH,
   LATEST_PATH,
   NOW_PLAYING_PATH,
@@ -128,6 +130,18 @@ export const GetMovieVideos = async (movieId: number): Promise<MovieVideos> => {
   url.search = new URLSearchParams({
     api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
     language: LANGUAGE
+  }).toString();
+
+  return fetchAndExtractResponse(url);
+};
+
+export const GetMovieReviews = async (movieId: number, page: number): Promise<Page<Review>> => {
+  const url = new URL(`${BASE_PATH}${MOVIE_PATH}/${movieId}${MOVIE_REVIEWS_PATH}`);
+
+  url.search = new URLSearchParams({
+    api_key: process.env.REACT_APP_MOVIE_API_KEY || '',
+    language: LANGUAGE,
+    page: page.toString()
   }).toString();
 
   return fetchAndExtractResponse(url);
