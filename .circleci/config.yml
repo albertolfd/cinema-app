@@ -19,6 +19,11 @@ executors:
       - image: hashicorp/terraform:latest
       - image: 'cibuilds/base:latest'
     resource_class: small
+  docker-publisher:
+    environment:
+      IMAGE_NAME: albertolfd/cinemadb
+    docker:
+      - image: circleci/buildpack-deps:stretch
 
 aliases:
   - &show-current-branch-name
@@ -173,6 +178,28 @@ jobs:
       - *notify-slack-failure-dev
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
+
+  publish-docker-hub:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - setup_remote_docker # from circleci
+      - *attach_workspace
+      - run: docker login -u "${DOCKER_HUB_USERNAME}" -p "${DOCKER_HUB_PASSWORD}"
+      - run: docker build -t ${IMAGE_NAME}:latest .
+      - run:
+          name: Tag and push to docker hub
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]
+            then
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:stable-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:stable-${CIRCLE_BUILD_NUM}
+            elif [ "${CIRCLE_BRANCH}" == "stage" ]
+            then
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:stage-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:stage-${CIRCLE_BUILD_NUM}
+            elif [ "${CIRCLE_BRANCH}" == "development" ]
+            then
+              docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM}
+            fi
 
   build:
     executor: app-executor
@@ -523,6 +550,15 @@ workflows:
           context: Slack
           requires:
             - install-dependencies
+      - publish-docker-hub:
+          requires:
+            - prettier
+          filters:
+            branches:
+              only:
+                - development
+                - stage
+                - master
       # Heroku does not need the build job
       # - deploy-heroku:
       #     filters:
