@@ -2,28 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import '@fontsource/roboto';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import Header from 'views/Header/Header';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import theme from 'themes/GlobalTheme';
-import MovieCatalogue from 'routes/MovieCatalogue';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { configureSearchQueryState } from 'hooks/useSearch';
+import GlobalRouter from 'routes/GlobalRouter';
 import reportWebVitals from './reportWebVitals';
+
+// Create React Query client
+const queryClient = new QueryClient();
+
+configureSearchQueryState();
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <StyledEngineProvider injectFirst>
-        <Router>
-          <Switch>
-            <Header>
-              <Route>
-                <MovieCatalogue />
-              </Route>
-            </Header>
-          </Switch>
-        </Router>
-      </StyledEngineProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <StyledEngineProvider injectFirst>
+          <GlobalRouter />
+        </StyledEngineProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

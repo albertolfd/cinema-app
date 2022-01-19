@@ -1,12 +1,14 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import SkeletonView from 'views/loadingIndicators/SkeletonView/SkeletonView';
 import styles from './Carousel.module.scss';
 
 interface CarouselProps {
   items: Array<JSX.Element>;
+  loading?: boolean;
 }
 
 const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
-  const { items } = props;
+  const { items, loading } = props;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevArrowHovering, setPrevArrowHovering] = useState(false);
@@ -85,39 +87,61 @@ const Carousel: FC<CarouselProps> = (props: CarouselProps) => {
 
   return (
     <div className={styles.carouselRoot}>
-      <div className={styles.galleryContainer}>
-        <div
-          className={`${styles.arrowContainer} ${styles.prevArrowContainer}`}
-          onClick={handlePrevious}
-          onMouseEnter={() => handleMouseEnterArrow('prev')}
-          onMouseLeave={() => handleMouseLeaveArrow('prev')}
-          role="navigation"
-        >
-          <div
-            className={`${styles.arrow} ${styles.prevArrow} ${
-              prevArrowHovering ? styles.arrowHover : ''
-            }`}
-          />
-        </div>
+      {loading ? (
+        <SkeletonView variant="rectangular" />
+      ) : (
+        <>
+          <div className={styles.galleryContainer}>
+            {
+              // #region Previous arrow
+            }
+            <div
+              className={`${styles.arrowContainer} ${styles.prevArrowContainer}`}
+              onClick={handlePrevious}
+              onMouseEnter={() => handleMouseEnterArrow('prev')}
+              onMouseLeave={() => handleMouseLeaveArrow('prev')}
+              role="navigation"
+            >
+              <div
+                className={`${styles.arrow} ${styles.prevArrow} ${
+                  prevArrowHovering ? styles.arrowHover : ''
+                }`}
+              />
+            </div>
+            {
+              // #endregion
+            }
 
-        <div className={`${styles.itemContainer} ${styles.noselect}`}>{items[currentIndex]}</div>
+            {/** Carousel item */}
+            <div className={`${styles.itemContainer} ${styles.noselect}`}>
+              {items[currentIndex]}
+            </div>
 
-        <div
-          className={`${styles.arrowContainer} ${styles.nextArrowContainer}`}
-          onClick={handleNext}
-          onMouseEnter={() => handleMouseEnterArrow('next')}
-          onMouseLeave={() => handleMouseLeaveArrow('next')}
-          role="navigation"
-        >
-          <div
-            className={`${styles.arrow} ${styles.nextArrow} ${
-              nextArrowHovering ? styles.arrowHover : ''
-            }`}
-          />
-        </div>
-      </div>
+            {
+              // #region Next arrow
+            }
+            <div
+              className={`${styles.arrowContainer} ${styles.nextArrowContainer}`}
+              onClick={handleNext}
+              onMouseEnter={() => handleMouseEnterArrow('next')}
+              onMouseLeave={() => handleMouseLeaveArrow('next')}
+              role="navigation"
+            >
+              <div
+                className={`${styles.arrow} ${styles.nextArrow} ${
+                  nextArrowHovering ? styles.arrowHover : ''
+                }`}
+              />
+            </div>
+            {
+              // #endregion
+            }
+          </div>
 
-      <div className={styles.indicatorContainer}>{indicators}</div>
+          {/** Indicators */}
+          <div className={styles.indicatorContainer}>{indicators}</div>
+        </>
+      )}
     </div>
   );
 };

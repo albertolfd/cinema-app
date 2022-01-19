@@ -10,9 +10,10 @@
   height: 93%;
 }
 
+/* #region Carousel item*/
 .itemContainer {
   display: flex;
-  justify-content: center;
+  height: 100%;
   width: 100%;
 }
 
@@ -25,7 +26,9 @@
   user-select: none; /* Non-prefixed version, currently
                      supported by Chrome, Edge, Opera and Firefox */
 }
+/* #endregion */
 
+/* #region Navigation arrows*/
 .arrowContainer {
   position: absolute;
   height: 100%;
@@ -112,7 +115,9 @@
     transform: rotate(30deg);
   }
 }
+/* #endregion */
 
+/* #region Indicators*/
 .indicatorContainer {
   display: flex;
   justify-content: center;
@@ -138,3 +143,4 @@
   height: 12px;
   width: 12px;
 }
+/* #endregion */

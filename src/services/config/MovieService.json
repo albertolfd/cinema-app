@@ -1,0 +1,17 @@
+{
+    "BASE_PATH": "https://api.themoviedb.org/3",
+    "MOVIE_PATH": "/movie",
+    "CREDITS_PATH": "/credits",
+    "MOVIE_IMAGES_PATH": "/images",
+    "MOVIE_VIDEOS_PATH": "/videos",
+    "MOVIE_REVIEWS_PATH": "/reviews",
+    "SEARCH_PATH": "/search",
+    "LATEST_PATH": "/latest",
+    "NOW_PLAYING_PATH": "/now_playing",
+    "POPULAR_PATH": "/popular",
+    "TOP_RATED_PATH": "/top_rated",
+    "UPCOMING_PATH": "/upcoming",
+    "LANGUAGE": "en-US",
+    "IMAGE_BASE_PATH": "https://image.tmdb.org/t/p/original",
+    "REGION": "es"
+}

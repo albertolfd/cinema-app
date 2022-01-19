@@ -1,0 +1,21 @@
+.imageList {
+  overflow: visible;
+}
+
+.listItem {
+  border-radius: 7px;
+  transition: all 500ms;
+}
+
+.listItem:hover {
+  transform: translateY(-3px) scale(1.07);
+}
+
+.listItem:hover .moreButton {
+  display: flex;
+}
+
+.listItemBar {
+  text-transform: uppercase;
+  font-weight: 700;
+}

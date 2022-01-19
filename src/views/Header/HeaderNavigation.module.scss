@@ -1,4 +1,11 @@
 .headerText {
   color: #9aa9bb;
-  font-size: 16px;
+  text-transform: none;
+  font-weight: normal;
+}
+
+.activeItem {
+  color: #3498db;
+  transition: all 500ms;
+  transform: translateY(-3px) scale(1.07);
 }
