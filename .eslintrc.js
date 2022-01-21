@@ -5,7 +5,6 @@ module.exports = {
       'airbnb/hooks',
       'plugin:@typescript-eslint/recommended',
       'plugin:jest/recommended',
-      'plugin:prettier/recommended',
       'plugin:import/errors',
       'plugin:import/warnings'
     ],
