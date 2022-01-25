@@ -5,14 +5,14 @@ FROM node:14.15-alpine as build
 # Set working directory
 WORKDIR /app
 
-ARG REACT_APP_MOVIE_API_KEY
-ENV REACT_APP_MOVIE_API_KEY = $REACT_APP_MOVIE_API_KEY
-
 # Copy files
 COPY . /app
 
 # Install dependencies
 RUN yarn install --production
+
+ARG REACT_APP_MOVIE_API_KEY
+ENV REACT_APP_MOVIE_API_KEY = $REACT_APP_MOVIE_API_KEY
 
 # Build app
 ENV REACT_APP_DEV_DISABLE_ESLINT=true
