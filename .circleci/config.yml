@@ -179,6 +179,27 @@ jobs:
       - *notify-slack-failure-stage
       - *notify-slack-failure-prod
 
+  build:
+    executor: app-executor
+    steps:
+      - checkout
+      - *attach_workspace
+      - *show-current-branch-name
+      - run:
+          name: Build project
+          command: |
+            yarn build
+            cd build
+            zip ../build.zip -r * .[^.]*
+            echo "Build succesful"
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build
+      - *notify-slack-failure-dev
+      - *notify-slack-failure-stage
+      - *notify-slack-failure-prod
+
   publish-docker-hub:
     executor: docker-publisher
     steps:
@@ -200,27 +221,6 @@ jobs:
             then
               docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM} && docker push ${IMAGE_NAME}:dev-${CIRCLE_BUILD_NUM}
             fi
-
-  build:
-    executor: app-executor
-    steps:
-      - checkout
-      - *attach_workspace
-      - *show-current-branch-name
-      - run:
-          name: Build project
-          command: |
-            yarn build
-            cd build
-            zip ../build.zip -r * .[^.]*
-            echo "Build succesful"
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - build
-      - *notify-slack-failure-dev
-      - *notify-slack-failure-stage
-      - *notify-slack-failure-prod
 
   deploy-s3:
     executor: app-executor
@@ -550,15 +550,6 @@ workflows:
           context: Slack
           requires:
             - install-dependencies
-      - publish-docker-hub:
-          requires:
-            - prettier
-          filters:
-            branches:
-              only:
-                - development
-                - stage
-                - master
       # Heroku does not need the build job
       # - deploy-heroku:
       #     filters:
@@ -572,6 +563,15 @@ workflows:
           requires:
             - lint
             - prettier
+      - publish-docker-hub:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - development
+                - stage
+                - master
       - slack/on-hold:
           context: Slack
           requires:

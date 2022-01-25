@@ -1,29 +1,30 @@
 # Build environment
 # Pull base image
-FROM node:14.15-alpine as build
+#FROM node:14.15-alpine as build
 
 # Set working directory
-WORKDIR /app
+#WORKDIR /app
 
 # Copy files
-COPY . /app
+#COPY . /app
 
 # Install dependencies
-RUN yarn install --production
+#RUN yarn install --production
 
-ARG REACT_APP_MOVIE_API_KEY
-ENV REACT_APP_MOVIE_API_KEY=$REACT_APP_MOVIE_API_KEY
+#ARG REACT_APP_MOVIE_API_KEY
+#ENV REACT_APP_MOVIE_API_KEY=$REACT_APP_MOVIE_API_KEY
 
 # Build app
-ENV REACT_APP_DEV_DISABLE_ESLINT=true
-ENV SKIP_PREFLIGHT_CHECK=true
-ENV DISABLE_ESLINT_PLUGIN=true
-RUN yarn build
+#ENV REACT_APP_DEV_DISABLE_ESLINT=true
+#ENV SKIP_PREFLIGHT_CHECK=true
+#ENV DISABLE_ESLINT_PLUGIN=true
+#RUN yarn build
 
 # Production environment
 FROM nginx:stable-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+#COPY --from=build /app/build /usr/share/nginx/html
+COPY /build /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Listen on port
