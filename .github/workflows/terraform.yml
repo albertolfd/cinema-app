@@ -34,7 +34,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init & validate
-        run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
+        run: echo "::set-env name=BRANCH_NAME::${{ github.head_ref }}"
+
+      - name: Print name
+        run: echo $BRANCH_NAME
       #     terraform init
       #     terraform validate
       #     terraform fmt -check
