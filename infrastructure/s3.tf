@@ -15,7 +15,7 @@ resource "aws_s3_bucket_acl" "cinema_app_s3_bucket_acl" {
 }
 
 resource "aws_s3_bucket_policy" "cinema_app_s3_bucket_policy" {
-  bucket = aws_s3_bucket.accesslogs_bucket.id
+  bucket = aws_s3_bucket.cinema_app_s3_bucket.id
   policy = templatefile("policy.json", {
     BUCKET_NAME    = local.prefix
     CLOUDFRONT_OAI = aws_cloudfront_origin_access_identity.cinema_app_origin_access_identity.iam_arn
