@@ -4,24 +4,41 @@
 
 resource "aws_s3_bucket" "cinema_app_s3_bucket" {
   bucket        = local.prefix
-  acl           = "private"
   force_destroy = true # when running terraform destroy, we want to destroy the bucket and its content
 
+  tags = local.common_tags
+}
+
+resource "aws_s3_bucket_acl" "cinema_app_s3_bucket_acl" {
+  bucket = aws_s3_bucket.cinema_app_s3_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_policy" "cinema_app_s3_bucket_policy" {
+  bucket = aws_s3_bucket.accesslogs_bucket.id
   policy = templatefile("policy.json", {
     BUCKET_NAME    = local.prefix
     CLOUDFRONT_OAI = aws_cloudfront_origin_access_identity.cinema_app_origin_access_identity.iam_arn
   })
+}
 
-  website {
-    index_document = "index.html"
-    error_document = "index.html"
+resource "aws_s3_bucket_versioning" "cinema_app_s3_bucket_versioning" {
+  bucket = aws_s3_bucket.cinema_app_s3_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "cinema_app_s3_bucket_website" {
+  bucket = aws_s3_bucket.cinema_app_s3_bucket.id
+
+  index_document {
+    suffix = "index.html"
   }
 
-  versioning {
-    enabled = true
+  error_document {
+    key = "index.html"
   }
-
-  tags = local.common_tags
 }
 
 resource "aws_s3_bucket_public_access_block" "cinema_app_s3_bucket_block_access" {
