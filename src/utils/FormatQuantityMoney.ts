@@ -1,3 +1,10 @@
+/**
+ * Rounds a quantity of money to the biggest unit
+ * and appends the symbol of that unit for display purposes.
+ * If quantity is less than 1, we display a placeholder instead.
+ * @param quantity the amount of money to display
+ * @returns a string representing the formatted quantity
+ */
 const formatQuantityMoney = (quantity: number): string => {
   let quantityFormatted = 'No data';
 

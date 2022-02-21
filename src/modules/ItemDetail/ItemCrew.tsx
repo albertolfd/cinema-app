@@ -3,7 +3,6 @@ import Credits from 'models/Credits';
 import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { getImagePath, GetMovieCredits } from 'services/MovieService';
-import sortAlphabetically from 'utils/SortAlphabetically';
 import DividerView from 'views/Divider/DividerView';
 import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
 
@@ -26,7 +25,7 @@ const ItemCrew: FC<ItemCrewProps> = (props: ItemCrewProps) => {
 
     if (crewMembers) {
       return crewMembers.sort((crewMemberA, crewMemberB) =>
-        sortAlphabetically(crewMemberA.name, crewMemberB.name)
+        crewMemberA.name.localeCompare(crewMemberB.name)
       );
     }
     return [];

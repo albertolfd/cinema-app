@@ -23,6 +23,12 @@ import {
   REGION
 } from './config/MovieService.json';
 
+/**
+ * Helper function to execute get requests
+ * and convert the json response to an object of type T
+ * @param url to make the GET request
+ * @returns a promise that resolves to an object of type T
+ */
 const fetchAndExtractResponse = async <T>(url: URL): Promise<T> => {
   const response = await fetch(url.toString(), {
     method: 'GET'
@@ -76,6 +82,12 @@ export const GetMoviesByCategory = async (
   return fetchAndExtractResponse(url);
 };
 
+/**
+ * Requests a list of movies that match the user query
+ * @param query input text to filter movies
+ * @param page of the resulting movie list
+ * @returns a promise that resolves to the resulting movie page
+ */
 export const SearchMovies = async (query: string, page: number): Promise<Page<Movie>> => {
   const url = new URL(`${BASE_PATH}${SEARCH_PATH}${MOVIE_PATH}`);
 
@@ -147,6 +159,11 @@ export const GetMovieReviews = async (movieId: number, page: number): Promise<Pa
   return fetchAndExtractResponse(url);
 };
 
+/**
+ * Helper function that builds the absolute path to stored images
+ * @param imagePath id of the requested image
+ * @returns the absolute path to the stored image
+ */
 export const getImagePath = (imagePath: string): string => {
   return `${IMAGE_BASE_PATH}${imagePath}`;
 };

@@ -47,7 +47,11 @@ const TheaterMovieList: FC = () => {
 
     const moviePages = movieQuery.data?.pages;
     if (moviePages) {
-      moviePages.forEach((page) => movieList.push(...page.results));
+      moviePages.forEach((page) => {
+        if (page.results) {
+          movieList.push(...page.results);
+        }
+      });
     }
 
     return movieList;

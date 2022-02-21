@@ -5,7 +5,6 @@ import React, { FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { getImagePath, GetMovie, GetMovieCredits } from 'services/MovieService';
 import formatQuantityMoney from 'utils/FormatQuantityMoney';
-import sortAlphabetically from 'utils/SortAlphabetically';
 import DividerView from 'views/Divider/DividerView';
 import ImagePoster from 'views/ImageViews/ImagePoster/ImagePoster';
 import TitleAndContentView from 'views/MovieViews/MovieTitleAndContentView/MovieTitleAndContentView';
@@ -29,7 +28,7 @@ const ItemOverview: FC<ItemOverviewProps> = (props: ItemOverviewProps) => {
 
     if (castMembers) {
       return castMembers.sort((castMemberA, castMemberB) =>
-        sortAlphabetically(castMemberA.name, castMemberB.name)
+        castMemberA.name.localeCompare(castMemberB.name)
       );
     }
     return [];
@@ -39,9 +38,7 @@ const ItemOverview: FC<ItemOverviewProps> = (props: ItemOverviewProps) => {
     const companies = movie?.production_companies;
 
     if (companies) {
-      return companies.sort((companyA, companyB) =>
-        sortAlphabetically(companyA.name, companyB.name)
-      );
+      return companies.sort((companyA, companyB) => companyA.name.localeCompare(companyB.name));
     }
     return [];
   }, [movie?.production_companies]);
@@ -51,7 +48,7 @@ const ItemOverview: FC<ItemOverviewProps> = (props: ItemOverviewProps) => {
 
     if (languageList) {
       return languageList.sort((languageA, languageB) =>
-        sortAlphabetically(languageA.name, languageB.name)
+        languageA.name.localeCompare(languageB.name)
       );
     }
     return [];
