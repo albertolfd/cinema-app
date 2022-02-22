@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  install:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -27,58 +27,11 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Archive node_modules
-        uses: actions/upload-artifact@v2
-        with:
-          name: node_modules
-          path: |
-            node_modules
-
-  lint:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    needs: install
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Download node_modules
-        uses: actions/download-artifact@v2
-        with:
-          name: node_modules
-
       - name: Run lint
         run: yarn lint:fix
 
-  prettier:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    needs: install
-
-    steps:
-      - uses: actions/checkout@v2
-
       - name: Run prettier
         run: yarn prettier:fix
-
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-    needs:
-      - lint
-      - prettier
-
-    steps:
-      - uses: actions/checkout@v2
 
       - name: Build app
         run: yarn build
