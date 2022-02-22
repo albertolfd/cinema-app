@@ -30,7 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: echo "BRANCH_NAME=github.head_ref" >> $GITHUB_ENV
+      - run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - run: echo "${{ env.BRANCH_NAME }}"
 
       # # Install the latest version of Terraform CLI
