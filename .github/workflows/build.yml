@@ -26,6 +26,7 @@ jobs:
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         uses: actions/cache@v2
         with:
+          node-version: ${{ matrix.node-version }}
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -54,6 +55,7 @@ jobs:
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         uses: actions/cache@v2
         with:
+          node-version: ${{ matrix.node-version }}
           # npm cache files are stored in `~/.npm` on Linux/macOS
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
