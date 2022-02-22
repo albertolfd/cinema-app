@@ -26,11 +26,12 @@ jobs:
       TF_WORKSPACE: ${ GITHUB_REF#refs/heads/ }
 
     steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - run: echo "::set-env name=BRANCH_NAME::${{ github.head_ref }}"
       - run: echo $BRANCH_NAME
-      # Checkout the repository to the GitHub Actions runner
-      # - name: Checkout
-      #   uses: actions/checkout@v2
 
       # # Install the latest version of Terraform CLI
       # - name: Setup Terraform
