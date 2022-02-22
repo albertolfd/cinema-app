@@ -61,4 +61,4 @@ jobs:
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
 
-      - run: echo $(terraform output test)
+      - run: echo $(terraform output cinema_app_bucket_name)
