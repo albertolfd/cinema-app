@@ -50,6 +50,7 @@ jobs:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
 
       - name: Terraform Apply
+        id: validate
         #  if: github.ref == 'refs/heads/development' && github.event_name == 'push'
         run: |
           terraform apply -auto-approve
@@ -59,3 +60,5 @@ jobs:
           terraform output cinema-app-distribution_domain_name > outputs/cinema-app-distribution_domain_name.txt
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
+
+      - run: echo ${{ steps.validate.outputs.cinema_app_bucket_name }}"
