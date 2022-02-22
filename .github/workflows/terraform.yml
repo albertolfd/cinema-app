@@ -34,7 +34,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - run: echo ${{ github.head_ref }}
+      - run: echo ${ github.head_ref }
 
       # - name: Terraform Init & validate
       #   run: |
