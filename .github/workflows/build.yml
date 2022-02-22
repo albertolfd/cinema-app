@@ -8,7 +8,7 @@ on:
       - master
 
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
 
     strategy:
@@ -27,6 +27,53 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+
+  lint:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - needs: install
+
+      - name: Run lint
+        run: yarn lint:fix
+
+  prettier:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - needs: install
+
+      - name: Run prettier
+        run: yarn prettier:fix
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - needs:
+          - lint
+          - prettier
 
       - name: Build app
         run: yarn build
