@@ -61,4 +61,4 @@ jobs:
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
 
-      - run: echo ${{ steps.validate.outputs.cinema_app_bucket_name }}"
+      - run: echo ${{ steps.validate.outputs.cinema_app_bucket_name }}
