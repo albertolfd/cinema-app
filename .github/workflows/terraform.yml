@@ -9,6 +9,16 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+    outputs:
+      cinema_app_bucket_name:
+        description: 'Name of the s3 bucket for this deployment'
+        value: ${{ jobs.terraform.outputs.output1 }}
+      cinema-app-distribution_id:
+        description: 'Id of the cloufront distribution for this deployment'
+        value: ${{ jobs.terraform.outputs.output2 }}
+      cinema-app-distribution_domain_name:
+        description: 'Domain name of the cloufront distribution for this deployment'
+        value: ${{ jobs.terraform.outputs.output3 }}
 
 jobs:
   terraform:
@@ -26,6 +36,11 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    outputs:
+      output1: ${{ steps.validate.outputs.cinema_app_bucket_name }}
+      output2: ${{ steps.validate.outputs.cinema-app-distribution_id }}
+      output3: ${{ steps.validate.outputs.cinema-app-distribution_domain_name }}
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -61,21 +76,10 @@ jobs:
           terraform apply -auto-approve
           mkdir -p outputs
           output=$(terraform output cinema_app_bucket_name)
-          echo $output
-          terraform output cinema_app_bucket_name > outputs/cinema_bucket_name.txt
-          terraform output cinema-app-distribution_id > outputs/cinema-app-distribution_id.txt
-          terraform output cinema-app-distribution_domain_name > outputs/cinema-app-distribution_domain_name.txt
+          echo "::set-output name=cinema_app_bucket_name::$output"
+          output=$(terraform output cinema-app-distribution_id)
+          echo "::set-output name=cinema-app-distribution_id::$output"
+          output=$(terraform output cinema-app-distribution_domain_name)
+          echo "::set-output name=cinema-app-distribution_domain_name::$output"
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
-
-      - name: Call terraform output
-        run: |
-          output=$(terraform output cinema_app_bucket_name)
-          echo $output
-
-      - name: Archive terraform outputs
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-outputs
-          path: |
-            infrastructure/outputs
