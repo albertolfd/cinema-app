@@ -60,6 +60,8 @@ jobs:
         run: |
           terraform apply -auto-approve
           mkdir -p outputs
+          output=$(terraform output cinema_app_bucket_name)
+          echo $output
           terraform output cinema_app_bucket_name > outputs/cinema_bucket_name.txt
           terraform output cinema-app-distribution_id > outputs/cinema-app-distribution_id.txt
           terraform output cinema-app-distribution_domain_name > outputs/cinema-app-distribution_domain_name.txt
