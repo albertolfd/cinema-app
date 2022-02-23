@@ -1,6 +1,14 @@
 name: Terraform apply
 
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      AWS_DEFAULT_REGION:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
 
 jobs:
   terraform:
