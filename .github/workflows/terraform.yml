@@ -66,6 +66,11 @@ jobs:
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
 
+      - name: Call terraform output
+        run: |
+          output=$(terraform output cinema_app_bucket_name)
+          echo $output
+
       - name: Archive terraform outputs
         uses: actions/upload-artifact@v2
         with:
