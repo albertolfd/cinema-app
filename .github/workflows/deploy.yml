@@ -20,6 +20,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: production
 
     needs:
       - terraform
@@ -34,4 +35,6 @@ jobs:
           name: build
 
       - name: Deploy to s3
-        run: aws --region ${{ AWS_DEFAULT_REGION }} s3 sync build s3://$(sed 's/\"//g' ${{ needs.terraform.outputs.cinema_app_bucket_name }}) --delete
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+        run: aws --region $AWS_DEFAULT_REGION s3 sync build s3://$(sed 's/\"//g' ${{ needs.terraform.outputs.cinema_app_bucket_name }}) --delete
