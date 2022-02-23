@@ -27,14 +27,15 @@ jobs:
       - build
 
     steps:
-      - run: echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} ${{ needs.terraform.outputs.cinema-app-distribution_id }} ${{ needs.terraform.outputs.cinema-app-distribution_domain_name }}
+      - run: echo ${{ needs.terraform.outputs.cinema-app-distribution_id }} ${{ needs.terraform.outputs.cinema-app-distribution_domain_name }}
 
       - name: Download build folder
         uses: actions/download-artifact@v2
         with:
           name: build
+          path: ~/
 
       - name: Deploy to s3
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-        run: aws --region $AWS_DEFAULT_REGION s3 sync ./build s3://$(echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} | tr -d '"' ) --delete
+        run: aws --region $AWS_DEFAULT_REGION s3 sync ~/build s3://$(echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} | tr -d '"' ) --delete
