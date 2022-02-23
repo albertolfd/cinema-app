@@ -9,6 +9,7 @@ on:
 
 jobs:
   terraform:
+    environment: production
     uses: ./.github/workflows/terraform.yml
     with:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
