@@ -1,0 +1,14 @@
+name: Deploy app to AWS
+
+on:
+  push:
+    branches:
+      - development
+      - stage
+      - master
+
+jobs:
+  terraform:
+    uses: ./.github/workflows/terraform.yml
+  build:
+    uses: ./.github/workflows/build.yml

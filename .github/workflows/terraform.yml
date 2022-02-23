@@ -1,11 +1,6 @@
-name: 'Terraform'
+name: Terraform apply
 
-on:
-  push:
-    branches:
-      - development
-      - stage
-      - master
+on: workflow_call
 
 jobs:
   terraform:
