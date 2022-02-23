@@ -32,3 +32,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
+
+      - name: Deploy to s3
+        run: aws --region ${AWS_DEFAULT_REGION} s3 sync build s3://${{ needs.terraform.outputs.cinema_app_bucket_name }} --delete
