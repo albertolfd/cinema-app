@@ -24,7 +24,7 @@
 FROM nginx:stable-alpine
 
 #COPY --from=build /app/build /usr/share/nginx/html
-COPY /build /usr/share/nginx/html
+COPY /home/runner/build/build /usr/share/nginx/html
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Listen on port
