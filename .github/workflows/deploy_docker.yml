@@ -21,7 +21,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get current branch
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=dev" >> $GITHUB_ENV
+        if: ${{ $(echo ${GITHUB_REF#refs/heads/}) == 'development' }}
+
+      - name: Get current branch
+        run: echo "IMAGE_TAG=stage" >> $GITHUB_ENV
+        if: ${{ $(echo ${GITHUB_REF#refs/heads/}) == 'stage' }}
+
+      - name: Get current branch
+        run: echo "IMAGE_TAG=stable" >> $GITHUB_ENV
+        if: ${{ $(echo ${GITHUB_REF#refs/heads/}) == 'master' }}
 
       - name: Download build folder
         uses: actions/download-artifact@v2
@@ -40,6 +49,7 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: albertolfd/cinemadb
+          tags: ${{ env.IMAGE_TAG }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
