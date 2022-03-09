@@ -22,15 +22,15 @@ jobs:
 
       - name: Get current branch
         run: echo "IMAGE_TAG=dev" >> $GITHUB_ENV
-        if: echo ${GITHUB_REF#refs/heads/} == 'development'
+        if: ${{ GITHUB_REF#refs/heads/ == 'development' }}
 
       - name: Get current branch
         run: echo "IMAGE_TAG=stage" >> $GITHUB_ENV
-        if: echo ${GITHUB_REF#refs/heads/} == 'stage'
+        if: ${{ ${GITHUB_REF#refs/heads/} == 'stage' }}
 
       - name: Get current branch
         run: echo "IMAGE_TAG=stable" >> $GITHUB_ENV
-        if: echo ${GITHUB_REF#refs/heads/}) == 'master'
+        if: ${{ GITHUB_REF#refs/heads/ == 'master' }}
 
       - name: Download build folder
         uses: actions/download-artifact@v2
