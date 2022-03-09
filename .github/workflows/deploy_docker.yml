@@ -34,6 +34,8 @@ jobs:
 
       - name: Download build folder
         uses: actions/download-artifact@v2
+        with:
+          name: build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -48,8 +50,6 @@ jobs:
           images: albertolfd/cinemadb
           tags: |
             type=raw,value=${{ env.IMAGE_TAG }}-${{ github.run_number }}
-
-      - run: ls -la ~/
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
