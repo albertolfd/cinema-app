@@ -1,0 +1,44 @@
+name: Deploy app to AWS
+
+on:
+  workflow_call:
+    inputs:
+      cinema_app_bucket_name:
+        required: true
+        type: string
+      cinema-app-distribution_id:
+        required: true
+        type: string
+    secrets:
+      AWS_DEFAULT_REGION:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build folder
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: ~/build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Deploy to s3
+        run: aws s3 sync ~/build s3://${{ inputs.cinema_app_bucket_name }} --delete
+
+      - name: Invalidate cloudfront distribution
+        run: |
+          aws configure set preview.cloudfront true
+          aws cloudfront create-invalidation --distribution-id ${{ inputs.cinema-app-distribution_id }} --paths /\*
