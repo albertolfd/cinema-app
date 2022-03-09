@@ -23,7 +23,7 @@ jobs:
       - terraform
       - build
     uses: ./.github/workflows/deploy_aws.yml
-    inputs:
+    with:
       cinema_app_bucket_name: $(echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} | tr -d '"' )
       cinema-app-distribution_id: $(echo ${{ needs.terraform.outputs.cinema-app-distribution_id }} | tr -d '"' )
     secrets:
