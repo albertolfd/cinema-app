@@ -51,7 +51,7 @@ jobs:
           images: albertolfd/cinemadb
           tags: |
             type=raw,value=${{ env.IMAGE_TAG }}
-            type=sha,priority=300,prefix=-,format=short
+            type=raw,value=${{ github.run_number }},prefix=-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
