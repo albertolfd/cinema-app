@@ -1,0 +1,88 @@
+name: Slack notify
+
+on:
+  workflow_call:
+    secrets:
+      SLACK_BOT_TOKEN:
+        required: true
+
+jobs:
+  notify:
+    name: 'Notify success on slack'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: 'cinema-circleci-dev'
+          # For posting a simple plain text message
+          payload: |
+            {
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
+                      "emoji": true
+                    }
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Branch*:\n${CIRCLE_BRANCH}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*When*:\n$(date +'%d/%m/%Y %T')"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
+                      }
+                    ],
+                    "accessory": {
+                      "type": "image",
+                      "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                      "alt_text": "alt text for image"
+                    }
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "View Job"
+                        },
+                        "url": "${CIRCLE_BUILD_URL}"
+                      },
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "Open app"
+                        },
+                        "url": "https://${DISTRIBUTION_URL}"
+                      }
+                    ]
+                  }
+                ]
+              }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

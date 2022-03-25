@@ -46,6 +46,6 @@ jobs:
     needs:
       - deploy-docker
       - deploy-aws
-    uses: ./.github/workflows/notify_slack.yml
+    uses: ./.github/workflows/notify.yml
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
