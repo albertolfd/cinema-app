@@ -75,11 +75,11 @@ jobs:
         run: |
           terraform apply -auto-approve
           mkdir -p outputs
-          output=$(terraform output cinema_app_bucket_name)
+          output=$(echo $(terraform output cinema_app_bucket_name) | tr -d '"' )
           echo "::set-output name=cinema_app_bucket_name::$output"
-          output=$(terraform output cinema-app-distribution_id)
+          output=$(echo $(terraform output cinema-app-distribution_id) | tr -d '"' )
           echo "::set-output name=cinema-app-distribution_id::$output"
-          output=$(terraform output cinema-app-distribution_domain_name)
+          output=$(echo $(terraform output cinema-app-distribution_domain_name) | tr -d '"' )
           echo "::set-output name=cinema-app-distribution_domain_name::$output"
         env:
           TF_WORKSPACE: ${{ env.BRANCH_NAME }}
