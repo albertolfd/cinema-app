@@ -71,6 +71,27 @@ jobs:
                       "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
                       "alt_text": "alt text for image"
                     }
+                  },
+                  {
+                    "type": "actions",
+                    "elements": [
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "View Job"
+                        },
+                        "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      },
+                      {
+                        "type": "button",
+                        "text": {
+                          "type": "plain_text",
+                          "text": "Open app"
+                        },
+                        "url": "https://${{ inputs.cinema-app-distribution_domain_name }}"
+                      }
+                    ]
                   }
                 ]
               }
