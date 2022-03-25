@@ -34,7 +34,7 @@ jobs:
 
       - name: Build app
         run: yarn build
-        with:
+        env:
           REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
 
       - name: Archive build
