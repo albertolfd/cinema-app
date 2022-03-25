@@ -15,38 +15,37 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  # build:
-  #   uses: ./.github/workflows/build.yml
-  #   secrets:
-  #     REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets:
+      REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
 
-  # deploy-aws:
-  #   needs:
-  #     - terraform
-  #     - build
-  #   uses: ./.github/workflows/deploy_aws.yml
-  #   with:
-  #     cinema_app_bucket_name: ${{ needs.terraform.outputs.cinema_app_bucket_name }}
-  #     cinema-app-distribution_id: ${{ needs.terraform.outputs.cinema-app-distribution_id }}
-  #   secrets:
-  #     AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  deploy-aws:
+    needs:
+      - terraform
+      - build
+    uses: ./.github/workflows/deploy_aws.yml
+    with:
+      cinema_app_bucket_name: ${{ needs.terraform.outputs.cinema_app_bucket_name }}
+      cinema-app-distribution_id: ${{ needs.terraform.outputs.cinema-app-distribution_id }}
+    secrets:
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  # deploy-docker:
-  #   needs:
-  #     - build
-  #   uses: ./.github/workflows/deploy_docker.yml
-  #   secrets:
-  #     REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
-  #     DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-  #     DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  deploy-docker:
+    needs:
+      - build
+    uses: ./.github/workflows/deploy_docker.yml
+    secrets:
+      REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
 
   notify:
     needs:
-      - terraform
-      # - deploy-docker
-      # - deploy-aws
+      - deploy-docker
+      - deploy-aws
     uses: ./.github/workflows/notify.yml
     with:
       cinema-app-distribution_domain_name: ${{ needs.terraform.outputs.cinema-app-distribution_domain_name }}
