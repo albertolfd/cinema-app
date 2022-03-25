@@ -47,5 +47,7 @@ jobs:
       - deploy-docker
       - deploy-aws
     uses: ./.github/workflows/notify.yml
+    with:
+      cinema-app-distribution_domain_name: $(echo ${{ needs.terraform.outputs.cinema-app-distribution_domain_name }} | tr -d '"' )
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

@@ -2,6 +2,10 @@ name: Slack notify
 
 on:
   workflow_call:
+    inputs:
+      cinema-app-distribution_domain_name:
+        required: true
+        type: string
     secrets:
       SLACK_BOT_TOKEN:
         required: true
@@ -37,11 +41,11 @@ jobs:
                     "fields": [
                       {
                         "type": "mrkdwn",
-                        "text": "*Project*:\n${CIRCLE_PROJECT_REPONAME}"
+                        "text": "*Project*:\n"
                       },
                       {
                         "type": "mrkdwn",
-                        "text": "*Branch*:\n${CIRCLE_BRANCH}"
+                        "text": "*Branch*:\n"
                       },
                       {
                         "type": "mrkdwn",
@@ -49,11 +53,11 @@ jobs:
                       },
                       {
                         "type": "mrkdwn",
-                        "text": "*Build*:\n${CIRCLE_BUILD_NUM}"
+                        "text": "*Build*:\n"
                       },
                       {
                         "type": "mrkdwn",
-                        "text": "*Author*:\n${CIRCLE_PROJECT_USERNAME}"
+                        "text": "*Author*:\n"
                       }
                     ],
                     "accessory": {
@@ -70,8 +74,7 @@ jobs:
                         "text": {
                           "type": "plain_text",
                           "text": "View Job"
-                        },
-                        "url": "${CIRCLE_BUILD_URL}"
+                        }
                       },
                       {
                         "type": "button",
@@ -79,7 +82,7 @@ jobs:
                           "type": "plain_text",
                           "text": "Open app"
                         },
-                        "url": "https://${DISTRIBUTION_URL}"
+                        "url": "https://${{ inputs.cinema-app-distribution_domain_name }}"
                       }
                     ]
                   }
