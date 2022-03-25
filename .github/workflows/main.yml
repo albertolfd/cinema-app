@@ -8,28 +8,28 @@ on:
       - master
 
 jobs:
-  # terraform:
-  #   uses: ./.github/workflows/terraform.yml
-  #   secrets:
-  #     AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  terraform:
+    uses: ./.github/workflows/terraform.yml
+    secrets:
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   build:
     uses: ./.github/workflows/build.yml
 
-  # deploy-aws:
-  #   needs:
-  #     - terraform
-  #     - build
-  #   uses: ./.github/workflows/deploy_aws.yml
-  #   with:
-  #     cinema_app_bucket_name: $(echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} | tr -d '"' )
-  #     cinema-app-distribution_id: $(echo ${{ needs.terraform.outputs.cinema-app-distribution_id }} | tr -d '"' )
-  #   secrets:
-  #     AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  deploy-aws:
+    needs:
+      - terraform
+      - build
+    uses: ./.github/workflows/deploy_aws.yml
+    with:
+      cinema_app_bucket_name: $(echo ${{ needs.terraform.outputs.cinema_app_bucket_name }} | tr -d '"' )
+      cinema-app-distribution_id: $(echo ${{ needs.terraform.outputs.cinema-app-distribution_id }} | tr -d '"' )
+    secrets:
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   deploy-docker:
     needs:
