@@ -44,6 +44,7 @@ jobs:
 
   notify:
     needs:
+      - terraform
       - deploy-docker
       - deploy-aws
     uses: ./.github/workflows/notify.yml

@@ -22,8 +22,6 @@ jobs:
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
-      - run: echo ${{ inputs.cinema-app-distribution_domain_name }}
-
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
