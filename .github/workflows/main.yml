@@ -41,3 +41,11 @@ jobs:
       REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
       DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
       DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+
+  notify:
+    needs:
+      - deploy-docker
+      - deploy-aws
+    uses: ./.github/workflows/notify.yml
+    secrets:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
