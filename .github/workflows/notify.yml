@@ -82,14 +82,6 @@ jobs:
                           "text": "View Job"
                         },
                         "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                      },
-                      {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "Open app"
-                        },
-                        "url": "https://${{ inputs.cinema-app-distribution_domain_name }}"
                       }
                     ]
                   }
