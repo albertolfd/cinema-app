@@ -48,7 +48,7 @@ jobs:
                       },
                       {
                         "type": "mrkdwn",
-                        "text": "*Branch*:\n${{ github.ref#refs/heads/ }}"
+                        "text": "*Branch*:\n$(echo ${GITHUB_REF#refs/heads/})"
                       },
                       {
                         "type": "mrkdwn",
