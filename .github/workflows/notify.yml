@@ -35,56 +35,6 @@ jobs:
                       "text": "Deployment to aws s3 and cloudfront is completed 🎉!",
                       "emoji": true
                     }
-                  },
-                  {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Project*:\n"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Branch*:\n"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*When*:\n$(date +'%d/%m/%Y %T')"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Build*:\n"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Author*:\n"
-                      }
-                    ],
-                    "accessory": {
-                      "type": "image",
-                      "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
-                      "alt_text": "alt text for image"
-                    }
-                  },
-                  {
-                    "type": "actions",
-                    "elements": [
-                      {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "View Job"
-                        }
-                      },
-                      {
-                        "type": "button",
-                        "text": {
-                          "type": "plain_text",
-                          "text": "Open app"
-                        },
-                        "url": "https://${{ inputs.cinema-app-distribution_domain_name }}"
-                      }
-                    ]
                   }
                 ]
               }
