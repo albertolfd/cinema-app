@@ -22,7 +22,10 @@ jobs:
       - name: Set current date as env variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
 
-      - run: echo ${{ inputs.cinema-app-distribution_domain_name }}
+      - name: Set current date as env variable
+        run: echo "DISTRIBUTION_DOMAIN=${{ inputs.cinema-app-distribution_domain_name }}" >> $GITHUB_ENV
+
+      - run: echo ${{ env.DISTRIBUTION_DOMAIN }}
 
       - name: Post to a Slack channel
         id: slack
@@ -91,7 +94,7 @@ jobs:
                           "type": "plain_text",
                           "text": "Open app"
                         },
-                        "url": "https://${{ inputs.cinema-app-distribution_domain_name }}"
+                        "url": "https://${{ env.DISTRIBUTION_DOMAIN }}"
                       }
                     ]
                   }
