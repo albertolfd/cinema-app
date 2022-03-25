@@ -1,6 +1,10 @@
 name: Build app
 
-on: workflow_call
+on:
+  workflow_call:
+    secrets:
+      REACT_APP_MOVIE_API_KEY:
+        required: true
 
 jobs:
   build:
@@ -9,6 +13,9 @@ jobs:
       matrix:
         node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    env:
+      REACT_APP_MOVIE_API_KEY: ${{ secrets.REACT_APP_MOVIE_API_KEY }}
 
     steps:
       - uses: actions/checkout@v2
